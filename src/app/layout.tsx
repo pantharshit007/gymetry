@@ -1,3 +1,5 @@
+import Provider from "@/provider";
+import { auth } from "@/server/auth/auth";
 import "@/styles/globals.css";
 
 import { GeistSans } from "geist/font/sans";
@@ -9,12 +11,15 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth();
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
+      <body>
+        <Provider session={session}>{children}</Provider>
+      </body>
     </html>
   );
 }
