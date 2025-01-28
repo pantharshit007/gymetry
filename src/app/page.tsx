@@ -4,6 +4,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { logoutAction } from "@/actions/auth";
 import { getClientSession } from "@/lib/getClientSession";
+import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   const session = getClientSession();
@@ -18,17 +19,15 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <Link href="/api/auth/protected">
-        <button className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-          Protected Page
-        </button>
-      </Link>
+      <Button asChild>
+        <Link href="/api/auth/protected">Protected route</Link>
+      </Button>
 
       {JSON.stringify(session)}
 
-      <button onClick={logout}>Logout</button>
+      <Button onClick={logout}>Logout</Button>
 
-      <button onClick={signin}>Sign in </button>
+      <Button onClick={signin}>Sign in </Button>
     </div>
   );
 }

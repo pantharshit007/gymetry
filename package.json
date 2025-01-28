@@ -1,5 +1,5 @@
 {
-  "name": "gymetric",
+  "name": "gymetry",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -17,19 +17,27 @@
     "preview": "next build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "db:docker": "sh start-database.sh",
+    "db:docker": "bash ./start-database.sh",
+    "clean": "rm -rf node_modules",
+    "superclean": "npm cache clean --force && rm -rf node_modules package-lock.json",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
     "@prisma/client": "^6.2.1",
+    "@radix-ui/react-slot": "^1.1.1",
     "@t3-oss/env-nextjs": "^0.10.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "geist": "^1.3.0",
+    "lucide-react": "^0.474.0",
     "next": "^15.0.1",
     "next-auth": "5.0.0-beta.25",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.6.0",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.3"
   },
   "devDependencies": {
