@@ -43,8 +43,8 @@ declare module "next-auth/jwt" {
  */
 export const authConfig = {
   pages: {
-    signIn: "/auth/login",
-    error: "/auth/error",
+    signIn: "/login",
+    error: "/error",
   },
 
   providers: [
@@ -69,6 +69,7 @@ export const authConfig = {
     },
   },
 
+  secret: env.AUTH_SECRET,
   adapter: PrismaAdapter(db),
   session: {
     strategy: "jwt",
