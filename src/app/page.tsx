@@ -18,7 +18,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center py-2">
       <Button asChild>
         <Link href="/api/auth/protected">Protected route</Link>
       </Button>
