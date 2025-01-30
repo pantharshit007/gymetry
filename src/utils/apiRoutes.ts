@@ -35,4 +35,4 @@ export const DEFAULT_LOGIN_REDIRECT = "/activity";
  * The default redirect path if user is not logged in
  * @type {string}
  */
-export const DEFAULT_REDIRECT = "/auth/login";
+export const DEFAULT_REDIRECT = "/login";
