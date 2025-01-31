@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment } from "react";
+import React from "react";
 import {
   Sheet,
   SheetContent,
@@ -8,9 +8,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ModeToggle } from "@/components/Mode-toggle";
 import { Button } from "@/components/ui/button";
-import { Calendar, LineChart, Home, Settings, User, Menu } from "lucide-react";
+import {
+  Calendar,
+  LineChart,
+  Home,
+  Settings,
+  User,
+  ChevronLeft,
+  AlignLeft,
+} from "lucide-react";
 import Link from "next/link";
 
 const AppBarItem = [
@@ -23,14 +30,14 @@ const AppBarItem = [
 
 function AppBar() {
   return (
-    <Fragment>
+    <>
       {/* Mobile Sidebar */}
       <div className="fixed left-4 top-4 z-50 lg:hidden">
         <Sheet>
           {/* TODO: move from here covers logo to right of nav? */}
-          <SheetTrigger asChild>
+          <SheetTrigger asChild className="fixed bottom-4 left-4 z-50">
             <Button variant="outline" size="icon">
-              <Menu className="h-5 w-5" />
+              <AlignLeft className="h-5 w-5" />
             </Button>
           </SheetTrigger>
 
@@ -40,19 +47,20 @@ function AppBar() {
               <h1 className="text-xl font-bold">
                 <Link href="/">Gymetry</Link>
               </h1>
-              {/* TODO: move to nav bar */}
-              <ModeToggle className="mr-6" />
             </div>
             <SheetDescription className="sr-only">
               Navigation menu for Gymetry application
             </SheetDescription>
 
             {/* Mobile Sidebar Navigation */}
-            <nav className="space-y-2 p-2">
+            <nav className="mt-2 flex-1 space-y-2 p-2">
               {AppBarItem.map((item) => (
-                <AppItem key={item.id} href={item.href} icon={item.icon}>
-                  {item.name}
-                </AppItem>
+                <AppItem
+                  key={item.id}
+                  href={item.href}
+                  icon={item.icon}
+                  name={item.name}
+                />
               ))}
             </nav>
           </SheetContent>
@@ -60,41 +68,51 @@ function AppBar() {
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className="fixed inset-y-0 hidden w-64 border-r bg-background lg:block">
-        <div className="flex h-16 items-center justify-between border-b px-4">
-          <h1 className="text-xl font-bold">
-            <Link href="/">Gymetry</Link>
-          </h1>
-          <ModeToggle />
-        </div>
-
+      <aside className="group fixed inset-y-0 top-14 hidden w-64 flex-col border-r bg-background transition-all duration-300 data-[collapsed=true]:w-16 lg:flex">
         {/* Desktop Sidebar Navigation */}
-        <nav className="space-y-2 p-2">
+        <nav className="mt-2 flex-1 space-y-2 p-2">
           {AppBarItem.map((item) => (
-            <AppItem key={item.id} href={item.href} icon={item.icon}>
-              {item.name}
-            </AppItem>
+            <AppItem
+              key={item.id}
+              href={item.href}
+              icon={item.icon}
+              name={item.name}
+            />
           ))}
         </nav>
+
+        {/* Collapse Button */}
+        <Button
+          variant={"ghost"}
+          className="absolute -right-5 top-5 h-10 w-10 rounded-full border bg-background"
+          onClick={() => {
+            const aside = document.querySelector("aside");
+            if (!aside) return;
+            const isCollapsed = aside.getAttribute("data-collapsed") === "true";
+            aside.setAttribute("data-collapsed", (!isCollapsed).toString());
+          }}
+        >
+          <ChevronLeft className="h-4 w-4 transition-transform group-data-[collapsed=true]:rotate-180" />
+        </Button>
       </aside>
-    </Fragment>
+    </>
   );
 }
 
 export default AppBar;
 
-interface AppItemProps {
+export interface AppItemProps {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
-  children: React.ReactNode;
+  name: string;
 }
 
-function AppItem({ href, icon: Icon, children }: AppItemProps) {
+function AppItem({ href, icon: Icon, name }: AppItemProps) {
   return (
     <Button asChild variant="ghost" className="w-full justify-start">
       <Link href={href}>
-        <Icon className="mr-2 h-5 w-5 text-orange-500" />
-        <span>{children}</span>
+        <Icon className="mr-2 h-6 w-6 text-orange-500" />
+        <span className="group-data-[collapsed=true]:hidden">{name}</span>
       </Link>
     </Button>
   );

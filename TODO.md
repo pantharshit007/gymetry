@@ -8,6 +8,7 @@
 - [ ] why even giving them the calender in stats page? when we are going to add current date, just show them current date.
 - [ ] new add entry should move focus to the card in stats page.
 - [ ] add delete button to the stats page.
+- [ ] fixed the `mx-auto` part in main tag in `(dashboard)/layout.tsx` file.
 
 <!-- TODOs Backend  -->
 

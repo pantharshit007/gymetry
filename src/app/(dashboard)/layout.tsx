@@ -10,10 +10,12 @@ async function layout({ children }: { children: React.ReactNode }) {
   // }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex flex-1">
       <AppBar />
       {/* Main content */}
-      <main className="flex-1 pl-0 lg:pl-64">{children}</main>
+      <main className="container flex-1 pl-0 pt-14 transition-all duration-300 lg:pl-64 lg:group-data-[collapsed=true]:pl-16">
+        {children}
+      </main>
     </div>
   );
 }
