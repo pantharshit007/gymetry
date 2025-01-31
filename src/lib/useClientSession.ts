@@ -14,7 +14,7 @@ export const useCurrentRole = () => {
   return session.data?.user?.role;
 };
 
-export const getClientSession = () => {
+export const useClientSession = () => {
   const session = useSession();
   return session;
 };

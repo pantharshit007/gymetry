@@ -19,7 +19,7 @@ const Error: React.FC<ErrorProps> = ({ error, reset }) => {
         <h1 className="text-3xl font-bold text-red-600">
           Oops! Something went wrong
         </h1>
-        <p className="mb-6 text-center text-lg text-primary">
+        <p className="mb-6 text-center font-mono text-lg text-primary">
           {error.message || "An unexpected error occurred"}
         </p>
         <Button onClick={reset}>Try again</Button>

@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { logoutAction } from "@/actions/auth";
-import { getClientSession } from "@/lib/getClientSession";
+import { useClientSession } from "@/lib/useClientSession";
 import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
-  const session = getClientSession();
+  const session = useClientSession();
 
   async function logout() {
     await logoutAction();
