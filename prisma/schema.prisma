@@ -51,7 +51,6 @@ model DailyLog {
     userId      String
     date        DateTime  @default(now())
     workout     Variation
-    sets        Int?
     reps        Int?
     weight      Int?      // just multiply by 100 before saving: 75.50 kg -> 7550
     steps       Int?

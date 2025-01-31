@@ -1,6 +1,7 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+// eslint-disable-next-line import/no-unresolved
 import { JWT } from "next-auth/jwt";
 
 import { db } from "@/server/db";

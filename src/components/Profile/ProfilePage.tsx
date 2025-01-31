@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Download } from "lucide-react";
 import { useRef } from "react";
 import html2canvas from "html2canvas";
+import Image from "next/image";
 
 export default function ProfilePage() {
   const achievementCardRef = useRef<HTMLDivElement>(null);
@@ -67,7 +68,7 @@ export default function ProfilePage() {
             <CardContent className="space-y-6 p-6">
               <div className="flex items-center gap-4">
                 <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
-                  <img
+                  <Image
                     src="/placeholder.svg?height=80&width=80"
                     alt="Profile"
                     className="h-16 w-16 rounded-full"
