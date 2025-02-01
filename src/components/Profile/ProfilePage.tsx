@@ -34,19 +34,24 @@ export default function ProfilePage() {
           <CardContent className="space-y-4">
             <div className="grid gap-2">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue="John Doe" />
+              <Input id="name" readOnly defaultValue="John Doe" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" defaultValue="john@example.com" />
+              <Input
+                id="email"
+                type="email"
+                readOnly
+                defaultValue="john@example.com"
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="weight">Weight (kg)</Label>
-              <Input id="weight" type="number" defaultValue="75" />
+              <Input id="weight" type="number" readOnly defaultValue="75" />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="height">Height (cm)</Label>
-              <Input id="height" type="number" defaultValue="180" />
+              <Input id="height" type="number" readOnly defaultValue="180" />
             </div>
             <Button>Save Changes</Button>
           </CardContent>
@@ -63,25 +68,26 @@ export default function ProfilePage() {
 
           <Card
             ref={achievementCardRef}
-            className="bg-gradient-to-br from-orange-500 to-orange-600 text-white"
+            className="bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600 text-white"
           >
             <CardContent className="space-y-6 p-6">
               <div className="flex items-center gap-4">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
                   <Image
-                    src="/placeholder.svg?height=80&width=80"
+                    src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Ryan"
                     alt="Profile"
+                    fill={true}
                     className="h-16 w-16 rounded-full"
                   />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold">John Doe</h3>
-                  <p className="text-orange-200">Elite Lifter</p>
+                  <p className="text-purple-200">Elite Lifter</p>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <h4 className="font-semibold text-orange-200">
+                <h4 className="font-semibold text-purple-200">
                   Personal Records
                 </h4>
                 <div className="grid gap-4">

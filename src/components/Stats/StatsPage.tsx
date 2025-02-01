@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarIcon, Plus, Save } from "lucide-react";
+import { CalendarIcon, Plus, Save, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
@@ -37,8 +37,8 @@ type Exercise = (typeof workouts)[number];
 
 interface ExerciseEntry {
   exercise: Exercise;
-  reps: number;
-  weight: number;
+  reps?: number;
+  weight?: number;
   steps?: number;
   distance?: number;
 }
@@ -53,10 +53,7 @@ export default function StatsPage() {
   const addEntry = () => {
     if (availableWorkouts.length === 0) return;
 
-    const newEntries = [
-      ...entries,
-      { exercise: availableWorkouts[0], reps: 0, weight: 0 },
-    ];
+    const newEntries = [...entries, { exercise: availableWorkouts[0] }];
     setEntries(newEntries as ExerciseEntry[]);
 
     // Remove the selected exercise from the available workouts
@@ -72,6 +69,13 @@ export default function StatsPage() {
     // prettier-ignore
     newEntries[index] = {...newEntries[index], [field]: value,} as ExerciseEntry;
     setEntries(newEntries);
+  };
+
+  const deleteEntry = (index: number) => {
+    const exerciseToDelete = entries[index]?.exercise;
+    // prettier-ignore
+    setAvailableWorkouts([...availableWorkouts, exerciseToDelete] as Exercise[]);
+    setEntries(entries.filter((_, idx) => idx !== index));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -90,7 +94,7 @@ export default function StatsPage() {
     const newEntries = [...entries];
     // reseting reps and weight for the new exercise
     // prettier-ignore
-    newEntries[index] = {...newEntries[index], exercise: newExercise, reps: 0, weight: 0, };
+    newEntries[index] = {...newEntries[index], exercise: newExercise };
     setEntries(newEntries);
 
     if (oldExercise === newExercise) return;
@@ -139,9 +143,7 @@ export default function StatsPage() {
             {entries.map((entry, index) => (
               <div
                 key={index}
-                className={`grid gap-4 max-sm:border-b max-sm:border-orange-500 max-sm:pb-4 sm:grid-cols-3 ${
-                  index === entries.length - 1 ? "max-sm:border-b-0" : ""
-                }`}
+                className="grid gap-4 max-sm:pb-4 sm:grid-cols-[1fr_1fr_1fr_auto]"
               >
                 <Select
                   value={entry.exercise}
@@ -162,12 +164,14 @@ export default function StatsPage() {
                   </SelectContent>
                 </Select>
 
+                {/* INPUT BOXES */}
                 {entry.exercise === "walk" ? (
                   <>
                     <Input
                       type="number"
                       placeholder="Steps"
                       value={entry.steps ?? ""}
+                      required
                       onChange={(e) =>
                         updateEntry(
                           index,
@@ -180,6 +184,7 @@ export default function StatsPage() {
                       type="number"
                       placeholder="Distance (meters)"
                       value={entry.distance ?? ""}
+                      required
                       onChange={(e) =>
                         updateEntry(
                           index,
@@ -195,6 +200,7 @@ export default function StatsPage() {
                       type="number"
                       placeholder="Reps"
                       value={entry.reps || ""}
+                      required
                       onChange={(e) =>
                         updateEntry(
                           index,
@@ -207,6 +213,7 @@ export default function StatsPage() {
                       type="number"
                       placeholder="Weight (kg)"
                       value={entry.weight || ""}
+                      required
                       onChange={(e) =>
                         updateEntry(
                           index,
@@ -217,6 +224,18 @@ export default function StatsPage() {
                     />
                   </>
                 )}
+
+                {/* DELETE BUTTON */}
+                <Button
+                  variant="ghost"
+                  type="button"
+                  size="icon"
+                  onClick={() => deleteEntry(index)}
+                  className="h-9 w-9 rounded-full outline-dotted outline-1 outline-rose-500 max-sm:ml-auto"
+                >
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                  <span className="sr-only">Delete exercise</span>
+                </Button>
               </div>
             ))}
 

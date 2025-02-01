@@ -59,6 +59,11 @@
   }
 }
 
+.parent[data-collapsed="true"] [data-content] {
+  /* lg: group-data-[collapsed=true]:pl-16 */
+  @apply lg:pl-24;
+}
+
 @layer base {
   * {
     @apply border-border;

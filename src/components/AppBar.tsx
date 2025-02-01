@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 import {
   Sheet,
   SheetContent,
@@ -19,6 +19,7 @@ import {
   AlignLeft,
 } from "lucide-react";
 import Link from "next/link";
+import { useCollapseState } from "@/store/collapseState";
 
 const AppBarItem = [
   { id: 1, name: "Dashboard", href: "/dashboard", icon: Home },
@@ -29,6 +30,8 @@ const AppBarItem = [
 ];
 
 function AppBar() {
+  const toggle = useCollapseState((state) => state.toggle);
+  const collapsed = useCollapseState((state) => state.collapse);
   return (
     <>
       {/* Mobile Sidebar */}
@@ -68,7 +71,10 @@ function AppBar() {
       </div>
 
       {/* Desktop Sidebar */}
-      <aside className="group fixed inset-y-0 top-14 hidden w-64 flex-col border-r bg-background transition-all duration-300 data-[collapsed=true]:w-16 lg:flex">
+      <aside
+        className="group fixed inset-y-0 top-14 hidden w-64 flex-col border-r bg-background transition-all duration-300 data-[collapsed=true]:w-16 lg:flex"
+        data-collapsed={collapsed}
+      >
         {/* Desktop Sidebar Navigation */}
         <nav className="mt-2 flex-1 space-y-2 p-2">
           {AppBarItem.map((item) => (
@@ -85,12 +91,7 @@ function AppBar() {
         <Button
           variant={"ghost"}
           className="absolute -right-5 top-5 h-10 w-10 rounded-full border bg-background"
-          onClick={() => {
-            const aside = document.querySelector("aside");
-            if (!aside) return;
-            const isCollapsed = aside.getAttribute("data-collapsed") === "true";
-            aside.setAttribute("data-collapsed", (!isCollapsed).toString());
-          }}
+          onClick={toggle}
         >
           <ChevronLeft className="h-4 w-4 transition-transform group-data-[collapsed=true]:rotate-180" />
         </Button>

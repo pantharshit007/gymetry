@@ -10,7 +10,7 @@ function login() {
         <h1 className="text-2xl font-bold dark:text-black">Welcome Back</h1>
         <Button
           onClick={() => signIn("google", { callbackUrl: "/" })}
-          className="flex items-center gap-4 rounded-lg border border-gray-300 px-6 py-3 hover:bg-gray-50"
+          className="flex items-center gap-4 rounded-lg border border-gray-300 px-6 py-3"
         >
           <span>Sign in with Google</span>
         </Button>
