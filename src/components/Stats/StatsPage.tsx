@@ -20,40 +20,24 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-const workouts = [
-  "biceps",
-  "back",
-  "shoulder",
-  "hamstring",
-  "chest",
-  "legs",
-  "triceps",
-  "abs",
-  "walk",
-] as const;
-
-type Exercise = (typeof workouts)[number];
-
-interface ExerciseEntry {
-  exercise: Exercise;
-  reps?: number;
-  weight?: number;
-  steps?: number;
-  distance?: number;
-}
+import { ApiResponse, ExerciseEntry, ExerciseVariation } from "@/utils/types";
+import { Variation } from "@prisma/client";
+import { useCurrentUser } from "@/lib/useClientSession";
 
 export default function StatsPage() {
   const [date, setDate] = useState<Date>(new Date());
   const [entries, setEntries] = useState<ExerciseEntry[]>([]);
-  const [availableWorkouts, setAvailableWorkouts] = useState<Exercise[]>([
-    ...workouts,
-  ]);
+  const [availableWorkouts, setAvailableWorkouts] = useState<
+    ExerciseVariation[]
+  >([...Object.values(Variation)]);
+
+  const user = useCurrentUser();
+  if (!user || !user.id) return <div>Loading...</div>;
 
   const addEntry = () => {
     if (availableWorkouts.length === 0) return;
 
-    const newEntries = [...entries, { exercise: availableWorkouts[0] }];
+    const newEntries = [...entries, { workout: availableWorkouts[0] }];
     setEntries(newEntries as ExerciseEntry[]);
 
     // Remove the selected exercise from the available workouts
@@ -72,15 +56,39 @@ export default function StatsPage() {
   };
 
   const deleteEntry = (index: number) => {
-    const exerciseToDelete = entries[index]?.exercise;
+    const exerciseToDelete = entries[index]?.workout;
     // prettier-ignore
-    setAvailableWorkouts([...availableWorkouts, exerciseToDelete] as Exercise[]);
+    setAvailableWorkouts([...availableWorkouts, exerciseToDelete] as ExerciseVariation[]);
     setEntries(entries.filter((_, idx) => idx !== index));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log({ date, entries });
+
+    if (entries.length === 0) {
+      window.alert("Please add at least one exercise");
+      return;
+    }
+
+    const data = await fetch("/api/v1/addlog", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-User-Id": user.id,
+      },
+      body: JSON.stringify({ date, entries }),
+    });
+
+    const response: ApiResponse = await data.json();
+
+    if (!data.ok || !response.success) {
+      console.error("> [ERROR-STATS] Failed to add log", response.message);
+      throw new Error("Failed to add log");
+    }
+
+    console.log(response);
+
     // TODO: Submit to API
   };
 
@@ -89,12 +97,15 @@ export default function StatsPage() {
   };
 
   // handle change of workouts
-  function handleExerciseChange(index: number, newExercise: Exercise): void {
-    const oldExercise = entries[index]?.exercise;
+  function handleExerciseChange(
+    index: number,
+    newExercise: ExerciseVariation,
+  ): void {
+    const oldExercise = entries[index]?.workout;
     const newEntries = [...entries];
     // reseting reps and weight for the new exercise
     // prettier-ignore
-    newEntries[index] = {...newEntries[index], exercise: newExercise };
+    newEntries[index] = {...newEntries[index], workout: newExercise };
     setEntries(newEntries);
 
     if (oldExercise === newExercise) return;
@@ -104,7 +115,7 @@ export default function StatsPage() {
       workout === newExercise ? oldExercise : workout,
     );
 
-    setAvailableWorkouts(newAvailableWorkouts as Exercise[]);
+    setAvailableWorkouts(newAvailableWorkouts as ExerciseVariation[]);
   }
 
   return (
@@ -146,8 +157,8 @@ export default function StatsPage() {
                 className="grid gap-4 max-sm:pb-4 sm:grid-cols-[1fr_1fr_1fr_auto]"
               >
                 <Select
-                  value={entry.exercise}
-                  onValueChange={(value: Exercise) =>
+                  value={entry.workout}
+                  onValueChange={(value: ExerciseVariation) =>
                     handleExerciseChange(index, value)
                   }
                 >
@@ -156,16 +167,17 @@ export default function StatsPage() {
                   </SelectTrigger>
 
                   <SelectContent>
-                    {[entry.exercise, ...availableWorkouts].map((exercise) => (
+                    {[entry.workout, ...availableWorkouts].map((exercise) => (
                       <SelectItem key={exercise} value={exercise}>
-                        {exercise.charAt(0).toUpperCase() + exercise.slice(1)}
+                        {exercise.charAt(0).toUpperCase() +
+                          exercise.slice(1).toLowerCase()}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
                 {/* INPUT BOXES */}
-                {entry.exercise === "walk" ? (
+                {entry.workout === "WALK" ? (
                   <>
                     <Input
                       type="number"
