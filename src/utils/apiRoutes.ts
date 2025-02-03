@@ -36,3 +36,15 @@ export const DEFAULT_LOGIN_REDIRECT = "/activity";
  * @type {string}
  */
 export const DEFAULT_REDIRECT = "/login";
+
+const apiPrefix = "/api/v1";
+
+/**
+ * The API routes for the application
+ */
+export const apiEndpoints = {
+  ADD_DAILYLOG: apiPrefix + "/addlog",
+  GET_DAILYLOG: apiPrefix + "/getlog",
+  GET_USER: apiPrefix + "/getuserprofile",
+  DELETE_USER: apiPrefix + "/deleteuser",
+};

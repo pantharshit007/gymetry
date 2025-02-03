@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { CalendarIcon, Plus, Save, Trash2 } from "lucide-react";
 import { format } from "date-fns";
+import { Variation } from "@prisma/client";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -20,11 +21,14 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ApiResponse, ExerciseEntry, ExerciseVariation } from "@/utils/types";
-import { Variation } from "@prisma/client";
+
+import { ExerciseEntry, ExerciseVariation } from "@/utils/types";
 import { useCurrentUser } from "@/lib/useClientSession";
+import { apiConnector } from "@/utils/apiConnector";
+import { apiEndpoints } from "@/utils/apiRoutes";
 
 export default function StatsPage() {
+  const [isPending, startTransition] = useTransition();
   const [date, setDate] = useState<Date>(new Date());
   const [entries, setEntries] = useState<ExerciseEntry[]>([]);
   const [availableWorkouts, setAvailableWorkouts] = useState<
@@ -62,7 +66,7 @@ export default function StatsPage() {
     setEntries(entries.filter((_, idx) => idx !== index));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log({ date, entries });
 
@@ -71,25 +75,25 @@ export default function StatsPage() {
       return;
     }
 
-    const data = await fetch("/api/v1/addlog", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-User-Id": user.id,
-      },
-      body: JSON.stringify({ date, entries }),
+    startTransition(async () => {
+      try {
+        const res = await apiConnector({
+          url: apiEndpoints.ADD_DAILYLOG,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-User-Id": user.id,
+          },
+          data: JSON.stringify({ date, entries }),
+        });
+
+        if (!res.success) {
+          console.error("[ERROR-STATS] Failed to add log", res.message);
+        }
+      } catch (err: any) {
+        console.log("[ERROR-STATS] Failed to add log", err);
+      }
     });
-
-    const response: ApiResponse = await data.json();
-
-    if (!data.ok || !response.success) {
-      console.error("> [ERROR-STATS] Failed to add log", response.message);
-      throw new Error("Failed to add log");
-    }
-
-    console.log(response);
-
-    // TODO: Submit to API
   };
 
   const scrollIntoView = (node: HTMLElement) => {
@@ -257,12 +261,15 @@ export default function StatsPage() {
                 type="button"
                 variant="outline"
                 onClick={addEntry}
-                disabled={availableWorkouts.length === 0}
+                disabled={availableWorkouts.length === 0 || isPending}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Exercise
               </Button>
-              <Button type="submit" disabled={entries.length === 0}>
+              <Button
+                type="submit"
+                disabled={entries.length === 0 || isPending}
+              >
                 <Save className="mr-2 h-4 w-4" />
                 Save Entries
               </Button>
