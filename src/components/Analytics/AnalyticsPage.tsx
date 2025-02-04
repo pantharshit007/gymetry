@@ -1,67 +1,74 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DatePickerWithRange } from "@/components/Date-range-picker";
-import { addDays } from "date-fns";
 import {
+  Bar,
+  BarChart,
+  Legend,
   Line,
   LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
 } from "recharts";
-import type { DateRange } from "react-day-picker";
-
-// Sample data - in a real app, this would come from your API
-const data = [
-  {
-    date: "Mon",
-    biceps: 40,
-    chest: 24,
-    legs: 24,
-  },
-  {
-    date: "Tue",
-    biceps: 30,
-    chest: 13,
-    legs: 22,
-  },
-  {
-    date: "Wed",
-    biceps: 20,
-    chest: 98,
-    legs: 22,
-  },
-  {
-    date: "Thu",
-    biceps: 27,
-    chest: 39,
-    legs: 20,
-  },
-  {
-    date: "Fri",
-    biceps: 18,
-    chest: 48,
-    legs: 21,
-  },
-];
+import { processData } from "@/lib/processData";
+import type { DailyLog } from "@/utils/types";
+// import sampleData from "@/utils/sample.json";
+import { CustomTooltip } from "../Stats/CustomToolTip";
 
 export default function AnalyticsPage() {
-  const [date, setDate] = useState<DateRange>({
-    from: new Date(),
-    to: addDays(new Date(), 7),
-  });
+  const [data, setData] = useState<DailyLog[]>([]);
+
+  async function fetchData() {
+    const res = await fetch("/api/v1/analysis");
+    const data = await res.json();
+    setData(data.sampleData.data as DailyLog[]);
+  }
+
+  useEffect(() => {
+    // In a real app, you would fetch data from an API here
+    // setData(sampleData.data as DailyLog[]);
+    fetchData();
+  }, []);
+
+  const {
+    exercisesByDate,
+    totalVolumeByExercise,
+    exerciseProgressData,
+    totalStepsByDate,
+    walkData,
+  } = processData(data);
+
+  const volumeData = Object.entries(totalVolumeByExercise).map(
+    ([name, volume]) => ({
+      name,
+      volume: volume / 100000, // Convert to a more readable scale
+    }),
+  );
+
+  const stepsData = Object.entries(totalStepsByDate).map(([date, steps]) => ({
+    date,
+    steps,
+  }));
+
+  const exerciseProgressChartData = Object.entries(exerciseProgressData).map(
+    ([exercise, data]) => ({
+      name: exercise,
+      data: data,
+    }),
+  );
+
+  // Format dates for display
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return `${date.getDate()}/${date.getMonth() + 1}`;
+  };
 
   return (
     <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Analytics</h1>
-        <DatePickerWithRange date={date} setDate={setDate} />
-      </div>
+      <h1 className="text-3xl font-bold">Workout Analysis (Last 7 Days)</h1>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
@@ -69,81 +76,134 @@ export default function AnalyticsPage() {
             <CardTitle>Total Volume by Exercise</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="biceps"
-                    stroke="#2563eb"
-                    strokeWidth={2}
-                    dot={{ strokeWidth: 2 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="chest"
-                    stroke="#db2777"
-                    strokeWidth={2}
-                    dot={{ strokeWidth: 2 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="legs"
-                    stroke="#16a34a"
-                    strokeWidth={2}
-                    dot={{ strokeWidth: 2 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={volumeData}>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="volume" fill="#f97316" />
+              </BarChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Max Weight Progress</CardTitle>
+            <CardTitle>Daily Steps</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="biceps"
-                    stroke="#2563eb"
-                    strokeWidth={2}
-                    dot={{ strokeWidth: 2 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="chest"
-                    stroke="#db2777"
-                    strokeWidth={2}
-                    dot={{ strokeWidth: 2 }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="legs"
-                    stroke="#16a34a"
-                    strokeWidth={2}
-                    dot={{ strokeWidth: 2 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={stepsData.reverse()}>
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="steps" stroke="#f97316" />
+              </LineChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Exercise Progress Over Time</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" minHeight={400} maxHeight={450}>
+            <LineChart margin={{ right: 10, left: 20 }}>
+              <XAxis
+                dataKey="date"
+                type="category"
+                allowDuplicatedCategory={false}
+                tickFormatter={formatDate}
+                label={{
+                  value: "Date (DD/MM)",
+                  position: "insideBottomRight",
+                  offset: -10,
+                }}
+              />
+              <YAxis
+                dataKey="volume"
+                name="Volume (kg)"
+                label={{
+                  value: "Volume (Reps * Weight)",
+                  angle: -90,
+                  position: "insideLeft",
+                  offset: -10,
+                }}
+              />
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ fill: "transparent" }}
+              />
+              <Legend wrapperStyle={{ bottom: -10 }} />
+              {exerciseProgressChartData.map((s) => (
+                <Line
+                  dataKey="volume"
+                  data={s.data}
+                  name={s.name}
+                  key={s.name}
+                  stroke={`rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`}
+                  connectNulls
+                  dot={{ strokeWidth: 2 }}
+                  style={{ marginTop: 10 }}
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Exercise Log</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {Object.entries(exercisesByDate).map(([date, exercises]) => (
+              <div key={date} className="border-b pb-4">
+                <h3 className="mb-2 text-lg font-semibold">{date}</h3>
+                <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+                  {exercises.map((exercise, index) => (
+                    <div key={index} className="rounded-md bg-muted p-2">
+                      <p className="font-medium">{exercise.workout}</p>
+                      <p>Reps: {exercise.reps}</p>
+                      <p>
+                        Weight:{" "}
+                        {exercise.weight ? exercise.weight / 100 : "N/A"} kg
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Walk Data</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {walkData.map((walk, index) => (
+              <div key={index} className="rounded-md bg-muted p-4">
+                <p className="font-medium">
+                  {new Date(walk.date).toLocaleDateString()}
+                </p>
+                <p>Steps: {walk.steps}</p>
+                <p>
+                  Distance:{" "}
+                  {walk.distance && walk.distance < 1000
+                    ? `${walk.distance} m`
+                    : `${(walk.distance || 0) / 1000} km`}
+                </p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

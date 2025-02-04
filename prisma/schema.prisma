@@ -84,7 +84,6 @@ enum Variation {
     CHEST
     BACK
     SHOULDER
-    ABS
     HAMSTRING
     QUADS
     DEADLIFT

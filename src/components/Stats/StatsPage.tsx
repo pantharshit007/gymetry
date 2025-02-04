@@ -90,6 +90,10 @@ export default function StatsPage() {
         if (!res.success) {
           console.error("[ERROR-STATS] Failed to add log", res.message);
         }
+
+        // resetting the entries and available workouts
+        setEntries([]);
+        setAvailableWorkouts([...Object.values(Variation)]);
       } catch (err: any) {
         console.log("[ERROR-STATS] Failed to add log", err);
       }
@@ -188,6 +192,7 @@ export default function StatsPage() {
                       placeholder="Steps"
                       value={entry.steps ?? ""}
                       required
+                      min={1}
                       onChange={(e) =>
                         updateEntry(
                           index,
@@ -201,6 +206,7 @@ export default function StatsPage() {
                       placeholder="Distance (meters)"
                       value={entry.distance ?? ""}
                       required
+                      min={1}
                       onChange={(e) =>
                         updateEntry(
                           index,
@@ -217,6 +223,7 @@ export default function StatsPage() {
                       placeholder="Reps"
                       value={entry.reps || ""}
                       required
+                      min={1}
                       onChange={(e) =>
                         updateEntry(
                           index,
@@ -230,6 +237,7 @@ export default function StatsPage() {
                       placeholder="Weight (kg)"
                       value={entry.weight || ""}
                       required
+                      min={1}
                       onChange={(e) =>
                         updateEntry(
                           index,

@@ -10,6 +10,7 @@
 - [x] add delete button to the stats page.
 - [x] fixed the `mx-auto` part in main tag in `(dashboard)/layout.tsx` file.
 - [ ] if time zone conversion is not working, then use `date-fns-tz` package.
+- [ ] add toast notifications for success and error messages.
 
 <!-- TODOs Backend  -->
 

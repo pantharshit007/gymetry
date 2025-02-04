@@ -5,10 +5,10 @@ import { auth } from "@/server/auth/auth";
 import ClientWrapper from "@/components/ClientWrapper";
 
 async function layout({ children }: { children: React.ReactNode }) {
-  // const session = await auth();
-  // if (!session || !session.user) {
-  //   return redirect("/login");
-  // }
+  const session = await auth();
+  if (!session || !session.user) {
+    return redirect("/login");
+  }
 
   return (
     <ClientWrapper>

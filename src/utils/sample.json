@@ -1,0 +1,206 @@
+{
+  "success": true,
+  "message": "Sample DailyLog Data",
+  "data": [
+    {
+      "date": "2025-02-03T10:30:00.000Z",
+      "workout": "SHOULDER",
+      "reps": 11,
+      "weight": 1800,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-02-03T10:30:00.000Z",
+      "workout": "WALK",
+      "reps": null,
+      "weight": null,
+      "steps": 6500,
+      "distance": 4000
+    },
+    {
+      "date": "2025-02-03T10:30:00.000Z",
+      "workout": "BICEPS",
+      "reps": 11,
+      "weight": 1000,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-02-02T14:55:12.000Z",
+      "workout": "BACK",
+      "reps": 9,
+      "weight": 2500,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-02-02T14:55:12.000Z",
+      "workout": "WALK",
+      "reps": null,
+      "weight": null,
+      "steps": 8000,
+      "distance": 5000
+    },
+    {
+      "date": "2025-02-01T11:20:30.000Z",
+      "workout": "CHEST",
+      "reps": 12,
+      "weight": 1200,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-02-01T11:20:30.000Z",
+      "workout": "WALK",
+      "reps": null,
+      "weight": null,
+      "steps": 7000,
+      "distance": 4500
+    },
+    {
+      "date": "2025-01-31T08:15:47.000Z",
+      "workout": "DEADLIFT",
+      "reps": 10,
+      "weight": 5000,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-31T08:15:47.000Z",
+      "workout": "BICEPS",
+      "reps": 11,
+      "weight": 1800,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-31T08:15:47.000Z",
+      "workout": "WALK",
+      "reps": null,
+      "weight": null,
+      "steps": 6000,
+      "distance": 4000
+    },
+    {
+      "date": "2025-01-30T16:00:00.000Z",
+      "workout": "QUADS",
+      "reps": 14,
+      "weight": 2200,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-30T16:00:00.000Z",
+      "workout": "WALK",
+      "reps": null,
+      "weight": null,
+      "steps": 5500,
+      "distance": 3500
+    },
+    {
+      "date": "2025-01-30T16:00:00.000Z",
+      "workout": "CHEST",
+      "reps": 12,
+      "weight": 1000,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-29T13:45:47.000Z",
+      "workout": "HAMSTRING",
+      "reps": 12,
+      "weight": 1500,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-29T13:45:47.000Z",
+      "workout": "BICEPS",
+      "reps": 11,
+      "weight": 1500,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-29T13:45:47.000Z",
+      "workout": "WALK",
+      "reps": null,
+      "weight": null,
+      "steps": 7000,
+      "distance": 4500
+    },
+    {
+      "date": "2025-01-28T10:05:23.000Z",
+      "workout": "HAMSTRING",
+      "reps": 15,
+      "weight": 500,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-28T10:05:23.000Z",
+      "workout": "WALK",
+      "reps": null,
+      "weight": null,
+      "steps": 4000,
+      "distance": 2500
+    },
+    {
+      "date": "2025-01-27T07:30:00.000Z",
+      "workout": "SHOULDER",
+      "reps": 10,
+      "weight": 3000,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-27T07:30:00.000Z",
+      "workout": "WALK",
+      "reps": null,
+      "weight": null,
+      "steps": 5000,
+      "distance": 3000
+    },
+    {
+      "date": "2025-01-27T07:30:00.000Z",
+      "workout": "CHEST",
+      "reps": 8,
+      "weight": 1200,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-26T14:22:11.000Z",
+      "workout": "BACK",
+      "reps": 8,
+      "weight": 2000,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-26T14:22:11.000Z",
+      "workout": "WALK",
+      "reps": null,
+      "weight": null,
+      "steps": 6000,
+      "distance": 4000
+    },
+    {
+      "date": "2025-01-25T09:10:47.756Z",
+      "workout": "CHEST",
+      "reps": 12,
+      "weight": 1000,
+      "steps": null,
+      "distance": null
+    },
+    {
+      "date": "2025-01-25T09:10:47.756Z",
+      "workout": "WALK",
+      "reps": null,
+      "weight": null,
+      "steps": 8000,
+      "distance": 5000
+    }
+  ]
+}
