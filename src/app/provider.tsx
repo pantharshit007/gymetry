@@ -18,7 +18,7 @@ export default function Provider({
       enableSystem
       disableTransitionOnChange
     >
-      <SessionProvider session={session} refetchOnWindowFocus={true}>
+      <SessionProvider session={session} refetchOnWindowFocus={false}>
         {children}
       </SessionProvider>
     </ThemeProvider>

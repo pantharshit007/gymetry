@@ -13,13 +13,40 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { processData } from "@/lib/processData";
 import type { DailyLog } from "@/utils/types";
 // import sampleData from "@/utils/sample.json";
 import { CustomTooltip } from "../Stats/CustomToolTip";
 
+const timeRangeOptions = [
+  { label: "Past 7 days", value: 7 },
+  { label: "Past 14 days", value: 14 },
+  { label: "Past 28 days", value: 28 },
+  // { label: "Past 90 days", value: 90 },
+];
+
+const colors = [
+  "#FF6384",
+  "#36A2EB",
+  "#FFCE56",
+  "#4BC0C0",
+  "#9966FF",
+  "#FF9F40",
+  "#FFB74D",
+  "#A366FF",
+];
+
 export default function AnalyticsPage() {
   const [data, setData] = useState<DailyLog[]>([]);
+  const [timeRange, setTimeRange] = useState(7);
+  const [selectedExercise, setSelectedExercise] = useState("ALL");
 
   async function fetchData() {
     const res = await fetch("/api/v1/analysis");
@@ -35,16 +62,16 @@ export default function AnalyticsPage() {
 
   const {
     exercisesByDate,
-    totalVolumeByExercise,
+    maxWeightExercise,
     exerciseProgressData,
     totalStepsByDate,
     walkData,
-  } = processData(data);
+  } = processData(data, { timeRange: timeRange });
 
-  const volumeData = Object.entries(totalVolumeByExercise).map(
-    ([name, volume]) => ({
+  const maxWeightData = Object.entries(maxWeightExercise).map(
+    ([name, weight]) => ({
       name,
-      volume: volume / 100000, // Convert to a more readable scale
+      weight,
     }),
   );
 
@@ -53,7 +80,12 @@ export default function AnalyticsPage() {
     steps,
   }));
 
-  const exerciseProgressChartData = Object.entries(exerciseProgressData).map(
+  const filteredExerciseData =
+    selectedExercise === "ALL"
+      ? exerciseProgressData
+      : { [selectedExercise]: exerciseProgressData[selectedExercise] };
+
+  const exerciseProgressChartData = Object.entries(filteredExerciseData).map(
     ([exercise, data]) => ({
       name: exercise,
       data: data,
@@ -66,28 +98,72 @@ export default function AnalyticsPage() {
     return `${date.getDate()}/${date.getMonth() + 1}`;
   };
 
+  const availableExercises = [{ name: "ALL" }, ...Object.values(maxWeightData)];
+
   return (
     <div className="space-y-6 p-6">
-      <h1 className="text-3xl font-bold">Workout Analysis (Last 7 Days)</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Workout Analysis</h1>
+
+        {/* Time range selector */}
+        <Select
+          value={`${timeRange}`}
+          onValueChange={(value) => setTimeRange(Number(value))}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select time range" />
+          </SelectTrigger>
+          <SelectContent>
+            {timeRangeOptions.map((option) => (
+              <SelectItem key={option.value} value={`${option.value}`}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+        <Card className="">
           <CardHeader>
-            <CardTitle>Total Volume by Exercise</CardTitle>
+            <CardTitle>Max Weight per Exercise</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={volumeData}>
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="volume" fill="#f97316" />
+              <BarChart data={maxWeightData} margin={{ bottom: 7 }}>
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 12 }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                  // interval={0}
+                  label={{
+                    value: "Exercise",
+                    position: "insideBottom",
+                    offset: -6,
+                  }}
+                />
+                <YAxis
+                  label={{
+                    value: "Weight Lifted",
+                    angle: -90,
+                    position: "insideLeft",
+                    offset: 17,
+                  }}
+                />
+                <Tooltip
+                  labelFormatter={(value) => `${value}!`}
+                  formatter={(value) => `${value} kg`}
+                  labelClassName="text-slate-900"
+                />
+                <Bar dataKey="weight" fill="#f97316" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="">
           <CardHeader>
             <CardTitle>Daily Steps</CardTitle>
           </CardHeader>
@@ -105,9 +181,22 @@ export default function AnalyticsPage() {
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Exercise Progress Over Time</CardTitle>
+          <Select value={selectedExercise} onValueChange={setSelectedExercise}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select exercise" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableExercises.map((exercise) => (
+                <SelectItem key={exercise.name} value={exercise.name}>
+                  {exercise.name === "ALL" ? "All Exercises" : exercise.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </CardHeader>
+
         <CardContent>
           <ResponsiveContainer width="100%" minHeight={400} maxHeight={450}>
             <LineChart margin={{ right: 10, left: 20 }}>
@@ -116,6 +205,9 @@ export default function AnalyticsPage() {
                 type="category"
                 allowDuplicatedCategory={false}
                 tickFormatter={formatDate}
+                angle={-45}
+                textAnchor="end"
+                height={40}
                 label={{
                   value: "Date (DD/MM)",
                   position: "insideBottomRight",
@@ -137,13 +229,13 @@ export default function AnalyticsPage() {
                 cursor={{ fill: "transparent" }}
               />
               <Legend wrapperStyle={{ bottom: -10 }} />
-              {exerciseProgressChartData.map((s) => (
+              {exerciseProgressChartData.map((s, index) => (
                 <Line
                   dataKey="volume"
                   data={s.data}
                   name={s.name}
                   key={s.name}
-                  stroke={`rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`}
+                  stroke={colors[index % colors.length]}
                   connectNulls
                   dot={{ strokeWidth: 2 }}
                   style={{ marginTop: 10 }}
