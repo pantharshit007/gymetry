@@ -24,7 +24,7 @@ async function layout({ children }: { children: React.ReactNode }) {
       {/* Main content */}
       <main
         data-content
-        className="container flex-1 pl-0 pt-14 transition-all duration-300 lg:pl-64"
+        className="container flex-1 pt-14 transition-all duration-300 lg:pl-64"
       >
         {children}
       </main>

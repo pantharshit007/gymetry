@@ -8,7 +8,7 @@ function UserAvatar() {
   const fallbackImgUrl =
     "https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Ryan";
   return (
-    <Avatar className="h-8 w-8 ring-2 ring-orange-500">
+    <Avatar className="h-8 w-8 ring-orange-500 focus:ring-2">
       <AvatarImage src={imgUrl || fallbackImgUrl} alt="User" />
       <AvatarFallback>U</AvatarFallback>
     </Avatar>

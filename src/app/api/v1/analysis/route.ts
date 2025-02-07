@@ -4,17 +4,17 @@ import { NextRequest, NextResponse } from "next/server";
 import sampleData from "@/utils/sample.json";
 
 const GET = async (req: NextRequest): Promise<NextResponse> => {
-  const session = await auth();
+  // const session = await auth();
 
-  if (!session || !session.user) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Not authenticated",
-      },
-      { status: 401 },
-    );
-  }
+  // if (!session || !session.user) {
+  //   return NextResponse.json(
+  //     {
+  //       success: false,
+  //       message: "Not authenticated",
+  //     },
+  //     { status: 401 },
+  //   );
+  // }
 
   // const res = await db.dailyLog.findMany({
   //   where: {

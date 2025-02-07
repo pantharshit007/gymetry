@@ -21,27 +21,3 @@ export interface ApiResponse {
   success: boolean;
   message: string;
 }
-
-export interface DailyLog {
-  id?: string;
-  userId?: string;
-  date: string;
-  workout: Variations;
-  reps?: number | null;
-  weight?: number | null;
-  steps?: number | null;
-  distance?: number | null;
-  createdAt?: string;
-}
-
-export type Variations =
-  | "BICEPS"
-  | "TRICEPS"
-  | "CHEST"
-  | "BACK"
-  | "SHOULDER"
-  | "ABS"
-  | "HAMSTRING"
-  | "QUADS"
-  | "DEADLIFT"
-  | "WALK";

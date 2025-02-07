@@ -11,7 +11,7 @@ export const CustomTooltip = ({
 }: TooltipProps<ValueType, NameType>) => {
   if (active && payload && payload.length) {
     return (
-      <div className="rounded border bg-white px-3 py-2 shadow">
+      <div className="rounded border bg-[#f0f4f7] px-3 py-2 shadow">
         <p className="text-slate-900">{new Date(label).toLocaleDateString()}</p>
         {payload.map((entry) =>
           entry.value !== 0 ? (
