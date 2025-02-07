@@ -6,7 +6,7 @@ export interface ChartProps {
   error?: Error | null;
 }
 
-export type TimeRange = 7 | 14 | 30 | 60 | 90;
+export type TimeRange = "7" | "14" | "28" | "90";
 
 export type ExercisesByDateType = {
   [key: string]: rawDataType[];

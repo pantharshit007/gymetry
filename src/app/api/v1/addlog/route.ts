@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/server/auth/auth";
 import { addLog } from "@/server/services/stats/addLogService";
-import { ApiResponse, LogBody } from "@/utils/types";
+import { ApiResponse, LogBody } from "@/types/types";
 import { headers } from "next/headers";
 
 export const POST = async (

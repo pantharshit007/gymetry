@@ -1,41 +1,51 @@
 import { auth } from "@/server/auth/auth";
-import { db } from "@/server/db";
 import { NextRequest, NextResponse } from "next/server";
-import sampleData from "@/utils/sample.json";
+import { headers } from "next/headers";
 
-const GET = async (req: NextRequest): Promise<NextResponse> => {
-  // const session = await auth();
+import { TimeRange } from "@/types/analysis";
+import { AnalysisAPIResponse } from "@/types/types";
+import { analyzeLog } from "@/server/services/analytics/analyzeLogService";
 
-  // if (!session || !session.user) {
-  //   return NextResponse.json(
-  //     {
-  //       success: false,
-  //       message: "Not authenticated",
-  //     },
-  //     { status: 401 },
-  //   );
-  // }
+const GET = async (
+  req: NextRequest,
+): Promise<NextResponse<AnalysisAPIResponse>> => {
+  const session = await auth();
+  const headerList = await headers();
+  const timeRange = (headerList.get("X-Time-Range") ?? "7") as TimeRange;
 
-  // const res = await db.dailyLog.findMany({
-  //   where: {
-  //     userId: session.user.id,
-  //   },
-  //   select: {
-  //     date: true,
-  //     workout: true,
-  //     reps: true,
-  //     weight: true,
-  //     steps: true,
-  //     distance: true,
-  //   },
-  // });
+  if (!session || !session.user) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Not authenticated",
+        data: [],
+      },
+      { status: 401 },
+    );
+  }
 
-  return NextResponse.json(
-    {
-      sampleData,
-    },
-    { status: 200 },
-  );
+  try {
+    const logs = await analyzeLog(session.user.id, timeRange);
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Data fetched!",
+        data: logs,
+      },
+      { status: 200 },
+    );
+  } catch (err: any) {
+    console.error("> [ERROR-FETCHLOG] fetching log ", err.message);
+    return NextResponse.json(
+      {
+        success: false,
+        message: err.message,
+        data: [],
+      },
+      { status: 400 },
+    );
+  }
 };
 
 export { GET };

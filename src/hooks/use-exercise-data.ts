@@ -9,7 +9,7 @@ import {
 import { rawDataType } from "@/types/dailyLog";
 import { useMemo, useState } from "react";
 
-export function useExerciseData(rawData: rawDataType[], timeRange: number) {
+export function useExerciseData(rawData: rawDataType[], timeRange: string) {
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,7 +25,7 @@ export function useExerciseData(rawData: rawDataType[], timeRange: number) {
       setIsLoading(true);
       const now = new Date();
       const startDate = new Date(
-        now.getTime() - timeRange * 24 * 60 * 60 * 1000,
+        now.getTime() - Number(timeRange) * 24 * 60 * 60 * 1000,
       );
 
       // Filter data based on time range

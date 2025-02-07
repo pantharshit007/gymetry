@@ -22,9 +22,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { ExerciseEntry, ExerciseVariation } from "@/utils/types";
+import { ExerciseEntry, ExerciseVariation } from "@/types/types";
 import { useCurrentUser } from "@/lib/useClientSession";
-import { apiConnector } from "@/utils/apiConnector";
+import { apiClient } from "@/utils/apiClient";
 import { apiEndpoints } from "@/utils/apiRoutes";
 
 export default function StatsPage() {
@@ -77,11 +77,10 @@ export default function StatsPage() {
 
     startTransition(async () => {
       try {
-        const res = await apiConnector({
+        const res = await apiClient({
           url: apiEndpoints.ADD_DAILYLOG,
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             "X-User-Id": user.id,
           },
           data: JSON.stringify({ date, entries }),
@@ -221,14 +220,14 @@ export default function StatsPage() {
                     <Input
                       type="number"
                       placeholder="Reps"
-                      value={entry.reps || ""}
+                      value={entry.reps ?? ""}
                       required
                       min={1}
                       onChange={(e) =>
                         updateEntry(
                           index,
                           "reps",
-                          Number.parseInt(e.target.value) || 0,
+                          Number.parseInt(e.target.value) ?? 0,
                         )
                       }
                     />

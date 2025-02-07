@@ -1,6 +1,6 @@
 import { setTimeZone } from "@/lib/streak";
 import { db } from "@/server/db";
-import { LogBody } from "@/utils/types";
+import { LogBody } from "@/types/types";
 
 /**
  * service to add present day's log to the database

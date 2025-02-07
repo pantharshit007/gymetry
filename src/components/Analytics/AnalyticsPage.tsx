@@ -19,6 +19,7 @@ import { WalkTable } from "@/components/table/WalkTable";
 import { useExerciseData } from "@/hooks/use-exercise-data";
 import { ChartProps, TimeRange } from "@/types/analysis";
 import { rawDataType } from "@/types/dailyLog";
+import { apiClient } from "@/utils/apiClient";
 
 const timeRangeOptions = [
   { label: "Past 7 days", value: 7 },
@@ -29,18 +30,25 @@ const timeRangeOptions = [
 
 export default function AnalyticsPage() {
   const [data, setData] = useState<rawDataType[]>([]);
-  const [timeRange, setTimeRange] = useState<TimeRange>(7);
+  const [timeRange, setTimeRange] = useState<TimeRange>("7");
   const [selectedExercise, setSelectedExercise] = useState("ALL");
 
   async function fetchData() {
-    const res = await fetch("/api/v1/analysis");
-    const data = await res.json();
-    setData(data.sampleData.data as rawDataType[]);
+    const headers = { ["X-Time-Range"]: timeRange };
+    const res = await apiClient<rawDataType[]>({
+      url: "/api/v1/analysis",
+      method: "GET",
+      headers,
+    });
+
+    if (res.success && res.data) {
+      setData(res.data);
+    }
   }
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [timeRange]);
 
   // Process data from hook
   const {
@@ -119,9 +127,7 @@ export default function AnalyticsPage() {
         {/* Time range selector */}
         <Select
           value={`${timeRange}`}
-          onValueChange={(value) =>
-            handleTimeRangeChange(Number(value) as TimeRange)
-          }
+          onValueChange={(value) => handleTimeRangeChange(value as TimeRange)}
         >
           <SelectTrigger className="w-[140px]">
             <SelectValue placeholder="Select time range" />

@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from "axios";
-import { ApiResponse } from "./types";
+import axios, { type AxiosResponse } from "axios";
+import { ApiResponse } from "../types/types";
 import { env } from "@/env";
 
 export type Response<T = never> = ApiResponse & {
@@ -28,13 +28,13 @@ const axiosInstance = axios.create({
  * A function that handles the response from the API
  * @param url the URL of the API endpoint
  * @param method the HTTP method to use
- * @param data the data to send in the request body
- * @param headers the headers to send with the request
- * @param params the query parameters to send with the request
+ * @param data? the data to send in the request body
+ * @param headers? the headers to send with the request
+ * @param params? the query parameters to send with the request
  * @returns the response from the API
  */
 
-export async function apiConnector<
+export async function apiClient<
   TData = never,
   TParams = Record<string, unknown>,
 >({

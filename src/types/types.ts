@@ -1,4 +1,5 @@
 import { Variation } from "@prisma/client";
+import { rawDataType } from "@/types/dailyLog";
 
 export interface LogBody {
   date: string;
@@ -20,4 +21,8 @@ export type ExerciseVariation = (typeof Variation)[keyof typeof Variation];
 export interface ApiResponse {
   success: boolean;
   message: string;
+}
+
+export interface AnalysisAPIResponse extends ApiResponse {
+  data: rawDataType[];
 }
