@@ -68,7 +68,6 @@ export default function StatsPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ date, entries });
 
     if (entries.length === 0) {
       window.alert("Please add at least one exercise");
@@ -237,11 +236,12 @@ export default function StatsPage() {
                       value={entry.weight || ""}
                       required
                       min={1}
+                      step={0.5}
                       onChange={(e) =>
                         updateEntry(
                           index,
                           "weight",
-                          Number.parseInt(e.target.value) || 0,
+                          parseFloat(e.target.value) ?? 0,
                         )
                       }
                     />

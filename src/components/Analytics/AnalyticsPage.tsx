@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useTransition,
+} from "react";
 
 import {
   Select,
@@ -25,6 +31,7 @@ const timeRangeOptions = [
   { label: "Past 7 days", value: 7 },
   { label: "Past 14 days", value: 14 },
   { label: "Past 28 days", value: 28 },
+  { label: "Past 60 days", value: 60 },
   // { label: "Past 90 days", value: 90 },
 ] as const;
 
@@ -32,18 +39,21 @@ export default function AnalyticsPage() {
   const [data, setData] = useState<rawDataType[]>([]);
   const [timeRange, setTimeRange] = useState<TimeRange>("7");
   const [selectedExercise, setSelectedExercise] = useState("ALL");
+  const [isPending, startTransition] = useTransition();
 
-  async function fetchData() {
-    const headers = { ["X-Time-Range"]: timeRange };
-    const res = await apiClient<rawDataType[]>({
-      url: "/api/v1/analysis",
-      method: "GET",
-      headers,
+  function fetchData() {
+    startTransition(async () => {
+      const headers = { ["X-Time-Range"]: timeRange };
+      const res = await apiClient<rawDataType[]>({
+        url: "/api/v1/analysis",
+        method: "GET",
+        headers,
+      });
+
+      if (res.success && res.data) {
+        setData(res.data);
+      }
     });
-
-    if (res.success && res.data) {
-      setData(res.data);
-    }
   }
 
   useEffect(() => {
@@ -142,25 +152,36 @@ export default function AnalyticsPage() {
         </Select>
       </div>
 
-      {/* Charts - section 1*/}
-      <div className="grid gap-6 md:grid-cols-2">
-        <MaxWeightChart data={maxWeightData} isLoading={isLoading} />
-        <StepsChart data={stepsData} isLoading={isLoading} />
-      </div>
-
-      {/* Charts - section 2*/}
-      <ProgressChart
-        data={exerciseProgressChartData || []}
-        selectedExercise={selectedExercise}
-        onExerciseChange={handleExerciseChange}
-        isLoading={isLoading}
-      />
-
-      {/* Data table - section 1*/}
-      <ExerciseTable data={ExerciseLogData} isLoading={isLoading} />
-
-      {/* Data table - section 2*/}
-      <WalkTable data={WalkLogData} isLoading={isLoading} />
+      {!isLoading && !isPending && data.length === 0 ? (
+        <div className="text-center">
+          <h2 className="text-xl font-bold">No data found</h2>
+        </div>
+      ) : (
+        <>
+          ({/* Charts - section 1*/}
+          <div className="grid gap-6 md:grid-cols-2">
+            <MaxWeightChart
+              data={maxWeightData}
+              isLoading={isLoading || isPending}
+            />
+            <StepsChart data={stepsData} isLoading={isLoading || isPending} />
+          </div>
+          {/* Charts - section 2*/}
+          <ProgressChart
+            data={exerciseProgressChartData || []}
+            selectedExercise={selectedExercise}
+            onExerciseChange={handleExerciseChange}
+            isLoading={isLoading || isPending}
+          />
+          {/* Data table - section 1*/}
+          <ExerciseTable
+            data={ExerciseLogData}
+            isLoading={isLoading || isPending}
+          />
+          {/* Data table - section 2*/}
+          <WalkTable data={WalkLogData} isLoading={isLoading || isPending} />)
+        </>
+      )}
     </div>
   );
 }

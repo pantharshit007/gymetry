@@ -18,7 +18,7 @@ async function addLog(logs: LogBody, userId: string) {
           date: adjustDate,
           workout: entry.workout,
           reps: entry.reps,
-          weight: entry.weight,
+          weight: entry.weight! * 100,
           steps: entry.steps,
           distance: entry.distance,
         })),
