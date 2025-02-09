@@ -58,7 +58,7 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     fetchData();
-  }, [timeRange]);
+  }, []);
 
   // Process data from hook
   const {
@@ -158,7 +158,7 @@ export default function AnalyticsPage() {
         </div>
       ) : (
         <>
-          ({/* Charts - section 1*/}
+          {/* Charts - section 1*/}
           <div className="grid gap-6 md:grid-cols-2">
             <MaxWeightChart
               data={maxWeightData}
@@ -179,7 +179,7 @@ export default function AnalyticsPage() {
             isLoading={isLoading || isPending}
           />
           {/* Data table - section 2*/}
-          <WalkTable data={WalkLogData} isLoading={isLoading || isPending} />)
+          <WalkTable data={WalkLogData} isLoading={isLoading || isPending} />
         </>
       )}
     </div>

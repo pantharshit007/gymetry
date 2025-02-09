@@ -26,10 +26,13 @@ const GET = async (): Promise<NextResponse<AnalysisAPIResponse>> => {
   }
 
   try {
+    const customTimeRange = "28";
+    const headers = { "Cache-Control": `public, max-age=${CACHE_TTL * 7}` };
+
     // cached data
     const cachedData = await cache.get<rawDataType[]>(CACHE_TYPES.ANALYZE_LOG, [
       session.user.id,
-      timeRange,
+      customTimeRange,
     ]);
 
     if (cachedData) {
@@ -39,11 +42,11 @@ const GET = async (): Promise<NextResponse<AnalysisAPIResponse>> => {
           message: "Data fetched from cache!",
           data: cachedData,
         },
-        { status: 200 },
+        { status: 200, headers },
       );
     }
 
-    const logs = await analyzeLog(session.user.id, timeRange);
+    const logs = await analyzeLog(session.user.id, customTimeRange);
 
     // setting cache
     await cache.set<rawDataType[]>(
@@ -59,7 +62,7 @@ const GET = async (): Promise<NextResponse<AnalysisAPIResponse>> => {
         message: "Data fetched!",
         data: logs,
       },
-      { status: 200 },
+      { status: 200, headers },
     );
   } catch (err: any) {
     console.error("> [ERROR-FETCHLOG] fetching log ", err.message);

@@ -14,9 +14,10 @@
 
 <!-- TODOs Backend  -->
 
-- [ ] add cron job to reset the streak when user logs in.
+- [x] add cron job to reset the streak when user logs in.
 - [ ] optimize the `addLog` service for streak calculation.
-- [ ] [!important] add redis for caching, to add last log date and check streak based on last log date.
+- [x] [!important] add redis for caching, to add last log date and check streak based on last log date.
+- [ ] update the cache when user add new log in the service, currently it will be staled till the next 7 days.
 
 <!-- TODOs Database  -->
 

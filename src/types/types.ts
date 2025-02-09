@@ -17,6 +17,13 @@ export interface ExerciseEntry {
 // Exercise type from Variation enum
 export type ExerciseVariation = (typeof Variation)[keyof typeof Variation];
 
+// streak cache type
+export interface StreakCache {
+  current_streak: number;
+  longest_streak: number;
+  last_log_date: Date;
+}
+
 // API response type
 export interface ApiResponse {
   success: boolean;

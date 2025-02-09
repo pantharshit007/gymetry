@@ -20,4 +20,5 @@ export const CACHE_TTL = env.CACHE_TTL ? Number(env.CACHE_TTL) : 86400;
 
 export const CACHE_TYPES = {
   ANALYZE_LOG: "analyzeLog",
+  STREAK: "streak",
 };
