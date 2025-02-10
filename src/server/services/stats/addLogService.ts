@@ -17,6 +17,14 @@ async function addLog(logs: LogBody, userId: string) {
     const result = await db.$transaction(async (tx) => {
       const currentStreak = await fetchUserStreak(userId, false);
 
+      // NO same day log
+      const currentDay = adjustDate.getDate();
+      const storedDay = currentStreak.last_log_date.getDate();
+
+      if (currentDay === storedDay) {
+        return false;
+      }
+
       let newCurrentStreak = 1;
       let newLongestStreak = currentStreak.longest_streak ?? 1;
 

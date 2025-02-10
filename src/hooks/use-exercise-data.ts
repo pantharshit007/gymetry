@@ -1,5 +1,6 @@
 "use client";
 
+import { setTimeZone } from "@/lib/streak";
 import {
   ExerciseProgressDataType,
   ExercisesByDateType,
@@ -24,9 +25,8 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
 
       setIsLoading(true);
       const now = new Date();
-      const startDate = new Date(
-        now.getTime() - Number(timeRange) * 24 * 60 * 60 * 1000,
-      );
+      const daysInMilliseconds = Number(timeRange) * 24 * 60 * 60 * 1000;
+      const startDate = new Date(now.getTime() - daysInMilliseconds);
 
       // Filter data based on time range
       const filteredData = rawData.filter(
@@ -96,7 +96,7 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
       // Process steps data
       const totalStepsByDate = walkData.reduce((acc, log) => {
         const date = new Date(log.date);
-        const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
+        const formattedDate = `${date.getUTCDate()}/${date.getUTCMonth() + 1}`;
         if (!acc[formattedDate]) {
           acc[formattedDate] = 0;
         }

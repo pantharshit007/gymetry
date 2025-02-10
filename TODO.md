@@ -11,13 +11,14 @@
 - [x] fixed the `mx-auto` part in main tag in `(dashboard)/layout.tsx` file.
 - [ ] if time zone conversion is not working, then use `date-fns-tz` package.
 - [ ] add toast notifications for success and error messages.
+- [-] fix the `new Date()` problem with the setUpdate method, in `use-exercise-data.ts`.
 
 <!-- TODOs Backend  -->
 
 - [x] add cron job to reset the streak when user logs in.
-- [ ] optimize the `addLog` service for streak calculation.
+- [x] optimize the `addLog` service for streak calculation.
 - [x] [!important] add redis for caching, to add last log date and check streak based on last log date.
-- [ ] update the cache when user add new log in the service, currently it will be staled till the next 7 days.
+- [x] update the cache when user add new log in the service, currently it will be staled till the next 7 days.
 
 <!-- TODOs Database  -->
 

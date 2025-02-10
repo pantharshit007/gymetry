@@ -11,8 +11,8 @@ interface TimeZone {
  */
 export const setTimeZone = ({ date, timeZone = "Asia/Kolkata" }: TimeZone) => {
   const options = { timeZone, hour12: false };
-  const dateTimeString = date.toLocaleString("en-US", options);
-  const dateTime = new Date(dateTimeString);
+  // const dateTimeString = new Date(date).toLocaleString("en-US", options);
+  const dateTime = new Date(date);
   return dateTime;
   //   dateTime.setHours(dateTime.getHours() + 5);
   //   dateTime.setMinutes(dateTime.getMinutes() + 30);

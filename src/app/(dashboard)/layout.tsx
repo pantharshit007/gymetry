@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 };
 
 async function layout({ children }: { children: React.ReactNode }) {
-  // const session = await auth();
-  // if (!session || !session.user) {
-  //   return redirect("/login");
-  // }
+  const session = await auth();
+  if (!session || !session.user) {
+    return redirect("/login");
+  }
 
   return (
     <ClientWrapper>
