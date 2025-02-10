@@ -53,6 +53,17 @@ export class RedisCache<T> implements CacheMethod<T> {
     }
   }
 
+  async getTtl(type: string, args: string[]): Promise<number | null> {
+    try {
+      const key = this.generateKey(type, args);
+      const ttl = await this.client.ttl(key);
+      return ttl ? ttl : null;
+    } catch (error) {
+      console.error("[ERROR-CACHE] getting ttl: ", error);
+      throw error;
+    }
+  }
+
   async evict(type: string, args: string[]): Promise<void> {
     try {
       const key = this.generateKey(type, args);

@@ -8,6 +8,7 @@ export interface CacheMethod<T = any> {
     expirySeconds?: number,
   ): Promise<void>;
   get<T = any>(type: string, args: string[]): Promise<T | null>;
+  getTtl(type: string, args: string[]): Promise<number | null>;
   evict(type: string, args: string[]): Promise<void | null>;
 }
 

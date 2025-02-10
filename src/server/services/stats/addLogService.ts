@@ -2,7 +2,9 @@ import { isStreakContinues, setTimeZone } from "@/lib/streak";
 import { cache } from "@/server/caches/cache";
 import { db } from "@/server/db";
 import { CACHE_TTL, CACHE_TYPES } from "@/types/cacheType";
+import { rawDataType } from "@/types/dailyLog";
 import { LogBody, StreakCache } from "@/types/types";
+import { fetchUserStreak, getSecondsUntilMidnight } from "../streak";
 
 /**
  * service to add present day's log to the database
@@ -12,9 +14,8 @@ async function addLog(logs: LogBody, userId: string) {
   const adjustDate = setTimeZone({ date: new Date(logs.date) });
 
   try {
-    return await db.$transaction(async (tx) => {
-      const currentStreak = await verifyStreak(userId);
-      if (!currentStreak) return { success: false, message: "No streak found" };
+    const result = await db.$transaction(async (tx) => {
+      const currentStreak = await fetchUserStreak(userId, false);
 
       let newCurrentStreak = 1;
       let newLongestStreak = currentStreak.longest_streak ?? 1;
@@ -70,46 +71,31 @@ async function addLog(logs: LogBody, userId: string) {
         CACHE_TTL + secondsUntilMidnight, // 1 day + remaining seconds
       );
 
-      return {
-        success: res.count > 0,
-        message: res.count > 0 ? "Log added successfully" : "Failed to add log",
-      };
+      return res.count > 0;
     });
+
+    const newEntries: rawDataType[] = logs.entries.map((entry) => ({
+      date: adjustDate,
+      workout: entry.workout,
+      reps: entry.reps || null,
+      weight: entry.weight ? entry.weight * 100 : null,
+      steps: entry.steps || null,
+      distance: entry.distance || null,
+    }));
+
+    return {
+      success: result,
+      message: result ? "Log added successfully" : "Failed to add log",
+      data: result ? newEntries : null,
+    };
   } catch (err: any) {
     console.error("> [ERROR-SERVICE] adding log ", err);
     return {
       success: false,
-      message: err.message,
+      message: err.message || "Failed to add log",
+      data: null,
     };
   }
-}
-
-async function verifyStreak(userId: string): Promise<false | StreakCache> {
-  const cachedStreak = await cache.get<StreakCache>(CACHE_TYPES.STREAK, [
-    userId,
-  ]);
-  if (cachedStreak) {
-    return cachedStreak;
-  }
-
-  // cache miss
-  const streak = await db.streak.findUnique({
-    where: { userId },
-    select: { current_streak: true, longest_streak: true, last_log_date: true },
-  });
-
-  if (!streak) return false;
-
-  return streak;
-}
-
-// Helper to get seconds until midnight
-function getSecondsUntilMidnight(): number {
-  const now = setTimeZone({ date: new Date() });
-  const midnight = new Date(now);
-  midnight.setHours(24, 0, 0, 0); // next midnight (IST)
-
-  return Math.floor((midnight.getTime() - now.getTime()) / 1000);
 }
 
 export { addLog };

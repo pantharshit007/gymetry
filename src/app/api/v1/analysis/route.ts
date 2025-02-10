@@ -51,7 +51,7 @@ const GET = async (): Promise<NextResponse<AnalysisAPIResponse>> => {
     // setting cache
     await cache.set<rawDataType[]>(
       CACHE_TYPES.ANALYZE_LOG,
-      [session.user.id, timeRange],
+      [session.user.id, customTimeRange],
       logs,
       CACHE_TTL * 7, // 7 days
     );

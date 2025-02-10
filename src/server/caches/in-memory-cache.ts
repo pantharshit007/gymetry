@@ -44,6 +44,19 @@ export class InMemoryCache<T> implements CacheMethod<T> {
     return superjson.parse<T>(cachedValue.value);
   }
 
+  async getTtl(type: string, args: string[]): Promise<number | null> {
+    const key = this.generateKey(type, args);
+    const cachedValue = this.inMemoryCache.get(key);
+    if (!cachedValue) return null;
+
+    // headsup: this part is buggy since we are storing in IST and server will run on a different timezone
+    if (cachedValue.expiry && cachedValue.expiry < Date.now()) {
+      this.inMemoryCache.delete(key);
+      return null;
+    }
+    return cachedValue.expiry ? cachedValue.expiry - Date.now() : null;
+  }
+
   evict(type: string, args: string[]): Promise<null | void> {
     const key = this.generateKey(type, args);
     this.inMemoryCache.delete(key);

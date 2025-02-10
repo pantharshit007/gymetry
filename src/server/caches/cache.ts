@@ -37,6 +37,16 @@ class Cache<T = any> implements CacheMethod<T> {
     return this.delegate.get<T>(type, args);
   }
 
+  /**
+   * return ttl in seconds
+   * @param type
+   * @param args
+   * @returns -2: key doesn't exist, -1: key exists but has no associated expire, >0: ttl in seconds
+   */
+  async getTtl(type: string, args: string[]): Promise<number | null> {
+    return this.delegate.getTtl(type, args);
+  }
+
   async evict(type: string, args: string[]): Promise<void | null> {
     return this.delegate.evict(type, args);
   }

@@ -4,6 +4,9 @@ import { auth } from "@/server/auth/auth";
 import { addLog } from "@/server/services/stats/addLogService";
 import { ApiResponse, LogBody } from "@/types/types";
 import { headers } from "next/headers";
+import { cache } from "@/server/caches/cache";
+import { CACHE_TYPES } from "@/types/cacheType";
+import { rawDataType } from "@/types/dailyLog";
 
 export const POST = async (
   req: NextRequest,
@@ -43,12 +46,15 @@ export const POST = async (
     }
 
     const res = await addLog(log, session.user.id);
-    if (!res.success) {
+    if (!res.success || !res.data) {
       return NextResponse.json(
         { success: false, message: res.message },
         { status: 400 },
       );
     }
+
+    // update the analytics cache (if available)
+    await updateAnalyticsCache(session.user.id, res.data);
 
     return NextResponse.json(
       { success: true, message: "Log added successfully" },
@@ -65,3 +71,17 @@ export const POST = async (
     );
   }
 };
+
+async function updateAnalyticsCache(userId: string, data: rawDataType[]) {
+  const key = [userId, "28"];
+  const ttl = await cache.getTtl(CACHE_TYPES.ANALYZE_LOG, key);
+  if (ttl && ttl > 0) {
+    const cachedLog =
+      (await cache.get<rawDataType[]>(CACHE_TYPES.ANALYZE_LOG, key)) || [];
+
+    const updatedData = [...cachedLog, ...data];
+    //prettier-ignore
+    await cache.set<rawDataType[]>(CACHE_TYPES.ANALYZE_LOG, key, updatedData, ttl);
+    return;
+  }
+}
