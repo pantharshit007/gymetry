@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { rawDataType } from "@/types/dailyLog";
 import Loader from "@/components/Loader";
+import { Activity } from "lucide-react";
 
 interface ExerciseTableProps {
   data: {
@@ -28,13 +29,22 @@ function ExerciseTableComponent({ data, isLoading }: ExerciseTableProps) {
               <h3 className="mb-2 text-lg font-semibold">{date}</h3>
               <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
                 {exercises.map((exercise, index) => (
-                  <div key={index} className="rounded-md bg-muted p-2">
-                    <p className="font-medium">{exercise.workout}</p>
-                    <p>Reps: {exercise.reps}</p>
-                    <p>
-                      Weight: {exercise.weight ? exercise.weight / 100 : "N/A"}{" "}
-                      kg
-                    </p>
+                  <div
+                    key={index}
+                    className="flex items-center justify-between rounded-md bg-muted p-4"
+                  >
+                    <div>
+                      <p className="font-medium tracking-wider text-orange-500">
+                        {exercise.workout}
+                      </p>
+                      <p>Reps: {exercise.reps}</p>
+                      <p>
+                        Weight:{" "}
+                        {exercise.weight ? exercise.weight / 100 : "N/A"} kg
+                      </p>
+                    </div>
+
+                    <Activity className="h-8 w-8 text-orange-400" />
                   </div>
                 ))}
               </div>

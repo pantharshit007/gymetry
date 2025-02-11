@@ -34,9 +34,7 @@ export const fetchUserStreak = async (
       },
     });
 
-    if (!streak) {
-      throw new Error("No streak found for user");
-    }
+    if (!streak) throw new Error("No streak found for user");
 
     // for add log service
     if (!setCache) return streak;

@@ -27,7 +27,7 @@ function StepsChartComponent({ data, isLoading }: StepsChartProps) {
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data.reverse()}>
+          <LineChart data={data}>
             <XAxis dataKey="date" />
             <YAxis />
             <Tooltip labelClassName="text-slate-900" />

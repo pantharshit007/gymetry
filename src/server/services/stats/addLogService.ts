@@ -42,7 +42,7 @@ async function addLog(logs: LogBody, userId: string) {
       }
 
       // create daily log
-      const [res] = await Promise.all([
+      const [res, updatedStreak] = await Promise.all([
         tx.dailyLog.createMany({
           data: logs.entries.map((entry) => ({
             userId,
@@ -73,12 +73,13 @@ async function addLog(logs: LogBody, userId: string) {
         }),
       ]);
 
+      const { id, userId: _, ...streakWithoutIdAndUserId } = updatedStreak;
       const secondsUntilMidnight = getSecondsUntilMidnight();
 
       await cache.set<StreakCache>(
         CACHE_TYPES.STREAK,
         [userId],
-        currentStreak,
+        streakWithoutIdAndUserId,
         CACHE_TTL + secondsUntilMidnight, // 1 day + remaining seconds
       );
 

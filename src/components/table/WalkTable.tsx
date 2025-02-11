@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Loader from "@/components/Loader";
 import { format } from "date-fns-tz";
+import { Footprints } from "lucide-react";
 
 interface WalkTableProps {
   data: {
@@ -26,17 +27,24 @@ function WalkTableComponent({ data, isLoading }: WalkTableProps) {
       <CardContent>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {data.map(({ date, steps, distance }, index) => (
-            <div key={index} className="rounded-md bg-muted p-4">
-              <p className="font-medium">
-                {format(date, "PP", { timeZone: userTimeZone })}
-              </p>
-              <p>Steps: {steps}</p>
-              <p>
-                Distance:{" "}
-                {distance && distance < 1000
-                  ? `${distance} m`
-                  : `${(distance || 0) / 1000} km`}
-              </p>
+            <div
+              key={index}
+              className="flex items-center justify-between rounded-md bg-muted p-4"
+            >
+              <div>
+                <p className="font-medium tracking-wider text-orange-500">
+                  {format(date, "PP", { timeZone: userTimeZone })}
+                </p>
+                <p>Steps: {steps}</p>
+                <p>
+                  Distance:{" "}
+                  {distance && distance < 1000
+                    ? `${distance} m`
+                    : `${(distance || 0) / 1000} km`}
+                </p>
+              </div>
+
+              <Footprints className="h-8 w-8 text-orange-400" />
             </div>
           ))}
         </div>

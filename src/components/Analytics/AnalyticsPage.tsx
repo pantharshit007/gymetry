@@ -175,11 +175,14 @@ export default function AnalyticsPage() {
           />
           {/* Data table - section 1*/}
           <ExerciseTable
-            data={ExerciseLogData}
+            data={ExerciseLogData.reverse()}
             isLoading={isLoading || isPending}
           />
           {/* Data table - section 2*/}
-          <WalkTable data={WalkLogData} isLoading={isLoading || isPending} />
+          <WalkTable
+            data={WalkLogData.reverse()}
+            isLoading={isLoading || isPending}
+          />
         </>
       )}
     </div>
