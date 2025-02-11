@@ -1,6 +1,6 @@
 "use client";
 
-import { setTimeZone } from "@/lib/streak";
+import { format, toZonedTime as utcToZonedTime } from "date-fns-tz";
 import {
   ExerciseProgressDataType,
   ExercisesByDateType,
@@ -24,11 +24,16 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
       // });
 
       setIsLoading(true);
+
+      // Get user's timezone
+      const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+      // Calculate date range in UTC
       const now = new Date();
       const daysInMilliseconds = Number(timeRange) * 24 * 60 * 60 * 1000;
       const startDate = new Date(now.getTime() - daysInMilliseconds);
 
-      // Filter data based on time range
+      // Filter data based on UTC time range
       const filteredData = rawData.filter(
         (log) => new Date(log.date) >= startDate,
       );
@@ -36,10 +41,14 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
       const exerciseData = filteredData.filter((log) => log.workout !== "WALK");
       const walkData = filteredData.filter((log) => log.workout === "WALK");
 
-      // Group exercises by date
+      // Group exercises by date (displayed in user's timezone)
       const exercisesByDate = exerciseData.reduce((acc, log) => {
-        const date = new Date(log.date);
-        const formattedDate = `${date.getDate()}/${date.getMonth() + 1}`;
+        const utcDate = new Date(log.date);
+        const userDate = utcToZonedTime(utcDate, userTimeZone);
+        const formattedDate = format(userDate, "PP", {
+          timeZone: userTimeZone,
+        });
+
         if (!acc[formattedDate]) {
           acc[formattedDate] = [];
         }
@@ -47,7 +56,7 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
         return acc;
       }, {} as ExercisesByDateType);
 
-      // Calculate max weights
+      // Calculate max weights (timezone independent)
       const maxWeightByExercise = exerciseData.reduce((acc, log) => {
         const workout = log.workout;
         if (!acc[workout] || (log.weight && log.weight / 100 > acc[workout])) {
@@ -56,7 +65,7 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
         return acc;
       }, {} as MaxWeightExerciseType);
 
-      // Sort all dates: will update to remove this later
+      // Sort dates in UTC
       const sortedDates = Array.from(
         new Set(
           exerciseData.map(
@@ -65,38 +74,44 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
         ),
       ).sort();
 
+      // Process exercise progress (display dates in user's timezone)
       const exerciseProgressData = exerciseData.reduce((acc, log) => {
-        const date = new Date(log.date);
-        const formattedDate = date.toISOString().split("T")[0];
+        const utcDate = new Date(log.date);
+        const userDate = utcToZonedTime(utcDate, userTimeZone);
+        const formattedDate = format(userDate, "yyyy-MM-dd", {
+          timeZone: userTimeZone,
+        });
         const workout = log.workout;
+
         if (!acc[workout]) {
-          acc[workout] = sortedDates.map(
-            (date): { date: string; volume: number } => ({
-              date: date as string,
-              volume: 0,
-            }),
-          );
+          acc[workout] = sortedDates.map((date) => ({
+            date: format(
+              utcToZonedTime(new Date(date as string), userTimeZone),
+              "yyyy-MM-dd",
+              { timeZone: userTimeZone },
+            ),
+            volume: 0,
+          }));
         }
 
-        // Find the entry for this date and update it
         const dateIndex = acc[workout]?.findIndex(
           (entry) => entry.date === formattedDate,
         );
 
-        if (dateIndex !== -1) {
-          if (!acc[workout][dateIndex]) return acc;
-
-          // const currentWeight = log.weight ? log.weight / 100 : 0;
-          // acc[workout][dateIndex].weight = currentWeight;
+        if (dateIndex !== -1 && acc[workout][dateIndex]) {
           acc[workout][dateIndex].volume += log.reps! * (log.weight! / 100);
         }
         return acc;
       }, {} as ExerciseProgressDataType);
 
-      // Process steps data
+      // Process steps data (display dates in user's timezone)
       const totalStepsByDate = walkData.reduce((acc, log) => {
-        const date = new Date(log.date);
-        const formattedDate = `${date.getUTCDate()}/${date.getUTCMonth() + 1}`;
+        const utcDate = new Date(log.date);
+        const userDate = utcToZonedTime(utcDate, userTimeZone);
+        const formattedDate = format(userDate, "d/M", {
+          timeZone: userTimeZone,
+        });
+
         if (!acc[formattedDate]) {
           acc[formattedDate] = 0;
         }
@@ -115,8 +130,7 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
       setError(
         err instanceof Error ? err : new Error("Failed to process data"),
       );
-
-      console.log("[ERROR PROCESSING DATA]", err);
+      console.error("[ERROR PROCESSING DATA]", err);
       return null;
     } finally {
       setIsLoading(false);

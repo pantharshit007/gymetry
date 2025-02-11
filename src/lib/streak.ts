@@ -1,5 +1,5 @@
 interface TimeZone {
-  date: Date;
+  date: Date | string;
   timeZone?: string;
 }
 

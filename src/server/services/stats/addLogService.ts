@@ -11,7 +11,7 @@ import { fetchUserStreak, getSecondsUntilMidnight } from "../streak";
  * @param logs: LogBody
  */
 async function addLog(logs: LogBody, userId: string) {
-  const adjustDate = setTimeZone({ date: new Date(logs.date) });
+  const adjustDate = setTimeZone({ date: logs.date });
 
   try {
     const result = await db.$transaction(async (tx) => {
@@ -22,7 +22,10 @@ async function addLog(logs: LogBody, userId: string) {
       const storedDay = currentStreak.last_log_date.getDate();
 
       if (currentDay === storedDay) {
-        return false;
+        return {
+          success: false,
+          message: "You have already logged today",
+        };
       }
 
       let newCurrentStreak = 1;
@@ -79,7 +82,7 @@ async function addLog(logs: LogBody, userId: string) {
         CACHE_TTL + secondsUntilMidnight, // 1 day + remaining seconds
       );
 
-      return res.count > 0;
+      return { success: res.count > 0 };
     });
 
     const newEntries: rawDataType[] = logs.entries.map((entry) => ({
@@ -92,8 +95,10 @@ async function addLog(logs: LogBody, userId: string) {
     }));
 
     return {
-      success: result,
-      message: result ? "Log added successfully" : "Failed to add log",
+      success: result.success,
+      message: result.success
+        ? "Log added successfully"
+        : (result.message ?? "Failed to add log"),
       data: result ? newEntries : null,
     };
   } catch (err: any) {

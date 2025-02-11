@@ -82,7 +82,7 @@ export default function StatsPage() {
           headers: {
             "X-User-Id": user.id,
           },
-          data: JSON.stringify({ date, entries }),
+          data: JSON.stringify({ date: date.toISOString(), entries }),
         });
 
         if (!res.success) {

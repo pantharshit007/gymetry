@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Loader from "@/components/Loader";
+import { format } from "date-fns-tz";
 
 interface WalkTableProps {
   data: {
@@ -15,6 +16,8 @@ function WalkTableComponent({ data, isLoading }: WalkTableProps) {
   if (isLoading) {
     return <Loader />;
   }
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   return (
     <Card>
       <CardHeader>
@@ -25,7 +28,7 @@ function WalkTableComponent({ data, isLoading }: WalkTableProps) {
           {data.map(({ date, steps, distance }, index) => (
             <div key={index} className="rounded-md bg-muted p-4">
               <p className="font-medium">
-                {new Date(date).toLocaleDateString()}
+                {format(date, "PP", { timeZone: userTimeZone })}
               </p>
               <p>Steps: {steps}</p>
               <p>
