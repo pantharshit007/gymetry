@@ -57,7 +57,7 @@ export const POST = async (
     await updateAnalyticsCache(session.user.id, res.data);
 
     return NextResponse.json(
-      { success: true, message: "Log added successfully" },
+      { success: true, message: "Log added for the day!" },
       { status: 200 },
     );
   } catch (e: any) {

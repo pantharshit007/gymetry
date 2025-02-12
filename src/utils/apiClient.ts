@@ -1,6 +1,7 @@
 import axios, { type AxiosResponse } from "axios";
 import { ApiResponse } from "../types/types";
 import { env } from "@/env";
+import { toast } from "@/hooks/use-toast";
 
 export type Response<T = never> = ApiResponse & {
   data?: T;
@@ -55,7 +56,14 @@ export async function apiClient<
 
     return res.data;
   } catch (err: any) {
-    console.error("[API AXIOS-ERROR]", err.message);
+    console.log("[API AXIOS-ERROR]", err.message);
+
+    toast({
+      title: "Error",
+      description: err.message || "Something went wrong",
+      variant: "error",
+    });
+
     if (axios.isAxiosError(err)) {
       if (err.response) {
         return {

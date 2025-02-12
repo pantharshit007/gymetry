@@ -24,7 +24,7 @@ async function addLog(logs: LogBody, userId: string) {
       if (currentDay === storedDay) {
         return {
           success: false,
-          message: "You have already logged today",
+          message: "Already logged today, see you tommorow!",
         };
       }
 

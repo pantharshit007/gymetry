@@ -26,13 +26,15 @@ import { useExerciseData } from "@/hooks/use-exercise-data";
 import { ChartProps, TimeRange } from "@/types/analysis";
 import { rawDataType } from "@/types/dailyLog";
 import { apiClient } from "@/utils/apiClient";
+import { toast } from "@/hooks/use-toast";
+import { useCurrentRole } from "@/lib/useClientSession";
 
 const timeRangeOptions = [
-  { label: "Past 7 days", value: 7 },
-  { label: "Past 14 days", value: 14 },
-  { label: "Past 28 days", value: 28 },
-  { label: "Past 60 days", value: 60 },
-  // { label: "Past 90 days", value: 90 },
+  { label: "Past 7 days", value: 7, adminOnly: false },
+  { label: "Past 14 days", value: 14, adminOnly: false },
+  { label: "Past 28 days", value: 28, adminOnly: false },
+  { label: "Past 60 days", value: 60, adminOnly: false },
+  { label: "Past 90 days", value: 90, adminOnly: true },
 ] as const;
 
 export default function AnalyticsPage() {
@@ -40,6 +42,8 @@ export default function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>("7");
   const [selectedExercise, setSelectedExercise] = useState("ALL");
   const [isPending, startTransition] = useTransition();
+
+  const role = useCurrentRole();
 
   function fetchData() {
     startTransition(async () => {
@@ -49,6 +53,17 @@ export default function AnalyticsPage() {
         method: "GET",
         headers,
       });
+
+      if (!res.success) {
+        console.error("[ERROR-ANALYTICS] Failed to fetch data", res.message);
+        toast({
+          title: "Error",
+          description: res.message || "Something went wrong",
+          variant: "error",
+        });
+
+        return;
+      }
 
       if (res.success && res.data) {
         setData(res.data);
@@ -144,7 +159,11 @@ export default function AnalyticsPage() {
           </SelectTrigger>
           <SelectContent>
             {timeRangeOptions.map((option) => (
-              <SelectItem key={option.value} value={`${option.value}`}>
+              <SelectItem
+                disabled={role !== "admin" && option.adminOnly}
+                key={option.value}
+                value={`${option.value}`}
+              >
                 {option.label}
               </SelectItem>
             ))}

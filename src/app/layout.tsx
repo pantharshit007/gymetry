@@ -5,6 +5,7 @@ import "@/styles/globals.css";
 import Provider from "@/app/provider";
 import { auth } from "@/server/auth/auth";
 import { NavBar } from "@/components/NavBar";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default async function RootLayout({
           <div className="flex min-h-screen flex-col">
             <NavBar />
             {children}
+            <Toaster />
           </div>
         </Provider>
       </body>

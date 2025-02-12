@@ -28,7 +28,7 @@ const GET = async (): Promise<NextResponse<AnalysisAPIResponse>> => {
   try {
     const customTimeRange = "28";
     // const headers = { "Cache-Control": `public, max-age=${CACHE_TTL * 7}` };
-    const headers = { 'Cache-Control': 'no-cache'};
+    const headers = { "Cache-Control": "no-cache" };
 
     // cached data
     const cachedData = await cache.get<rawDataType[]>(CACHE_TYPES.ANALYZE_LOG, [

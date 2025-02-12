@@ -12,6 +12,7 @@
 - [x] if time zone conversion is not working, then use `date-fns-tz` package.
 - [ ] add toast notifications for success and error messages.
 - [x] fix the `new Date()` problem with the setUpdate method, in `use-exercise-data.ts`.
+- [ ] fix option for when user clicks on 60 days option, it should bring 60days data.
 
 <!-- TODOs Backend  -->
 
@@ -20,6 +21,8 @@
 - [x] [!important] add redis for caching, to add last log date and check streak based on last log date.
 - [x] update the cache when user add new log in the service, currently it will be staled till the next 7 days.
 - [ ] add docker compose file.
+- [ ] add rate limiting
+- [ ] add analytics with posthog.
 
 <!-- TODOs Database  -->
 

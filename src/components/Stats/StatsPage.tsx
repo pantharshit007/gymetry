@@ -26,6 +26,7 @@ import { ExerciseEntry, ExerciseVariation } from "@/types/types";
 import { useCurrentUser } from "@/lib/useClientSession";
 import { apiClient } from "@/utils/apiClient";
 import { apiEndpoints } from "@/utils/apiRoutes";
+import { toast } from "@/hooks/use-toast";
 
 export default function StatsPage() {
   const [isPending, startTransition] = useTransition();
@@ -86,14 +87,32 @@ export default function StatsPage() {
         });
 
         if (!res.success) {
-          console.error("[ERROR-STATS] Failed to add log", res.message);
+          console.log("[ERROR-STATS] Failed to add log:", res.message);
+          toast({
+            title: "Error",
+            description: res.message || "Something went wrong",
+            variant: "error",
+          });
+
+          return;
         }
+
+        toast({
+          title: "Success",
+          description: res.message || "Log added for the day!",
+          variant: "success",
+        });
 
         // resetting the entries and available workouts
         setEntries([]);
         setAvailableWorkouts([...Object.values(Variation)]);
       } catch (err: any) {
         console.log("[ERROR-STATS] Failed to add log", err);
+        toast({
+          title: "Error",
+          description: err.message || "Something went wrong",
+          variant: "error",
+        });
       }
     });
   };

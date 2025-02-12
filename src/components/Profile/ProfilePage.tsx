@@ -8,9 +8,13 @@ import { Download } from "lucide-react";
 import { useRef } from "react";
 import html2canvas from "html2canvas";
 import Image from "next/image";
+import { useCurrentUser } from "@/lib/useClientSession";
+import UserAvatar from "../User-avatar";
 
 export default function ProfilePage() {
   const achievementCardRef = useRef<HTMLDivElement>(null);
+
+  const user = useCurrentUser();
 
   const downloadAchievementCard = async () => {
     if (achievementCardRef.current) {
@@ -33,27 +37,32 @@ export default function ProfilePage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" readOnly defaultValue="John Doe" />
+              <Label>Name</Label>
+              <p className="font-mono text-orange-400">
+                {user?.name || "John Doe"}
+              </p>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                readOnly
-                defaultValue="john@example.com"
-              />
+              <Label>Email</Label>
+              <p className="font-mono text-orange-400">
+                {user?.email || "john@example.com"}
+              </p>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="weight">Weight (kg)</Label>
-              <Input id="weight" type="number" readOnly defaultValue="75" />
+              <Label>Role</Label>
+              <p className="capitalize">{user?.role || "User"}</p>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="height">Height (cm)</Label>
-              <Input id="height" type="number" readOnly defaultValue="180" />
-            </div>
-            <Button>Save Changes</Button>
+
+            {/*
+        <div className="grid gap-2">
+          <Label>Weight (kg)</Label>
+          <p>75</p>
+        </div>
+        <div className="grid gap-2">
+          <Label>Height (cm)</Label>
+          <p>180</p>
+        </div>
+        */}
           </CardContent>
         </Card>
 
@@ -73,36 +82,13 @@ export default function ProfilePage() {
             <CardContent className="space-y-6 p-6">
               <div className="flex items-center gap-4">
                 <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
-                  <Image
-                    src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Ryan"
-                    alt="Profile"
-                    fill={true}
-                    className="h-16 w-16 rounded-full"
-                  />
+                  <UserAvatar className="h-full w-full" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold">John Doe</h3>
-                  <p className="text-purple-200">Elite Lifter</p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="font-semibold text-purple-200">
-                  Personal Records
-                </h4>
-                <div className="grid gap-4">
-                  <div className="flex items-center justify-between">
-                    <span>Bench Press</span>
-                    <span className="font-bold">120 kg</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>Deadlift</span>
-                    <span className="font-bold">180 kg</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span>Squat</span>
-                    <span className="font-bold">160 kg</span>
-                  </div>
+                  <h3 className="text-2xl font-bold">{user?.name || "Ryan"}</h3>
+                  <p className="font-medium italic text-slate-700">
+                    Elite Lifter
+                  </p>
                 </div>
               </div>
             </CardContent>
