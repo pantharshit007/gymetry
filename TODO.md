@@ -10,7 +10,7 @@
 - [x] add delete button to the stats page.
 - [x] fixed the `mx-auto` part in main tag in `(dashboard)/layout.tsx` file.
 - [x] if time zone conversion is not working, then use `date-fns-tz` package.
-- [ ] add toast notifications for success and error messages.
+- [x] add toast notifications for success and error messages.
 - [x] fix the `new Date()` problem with the setUpdate method, in `use-exercise-data.ts`.
 - [ ] fix option for when user clicks on 60 days option, it should bring 60days data.
 
