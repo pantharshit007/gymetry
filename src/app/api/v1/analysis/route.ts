@@ -12,7 +12,19 @@ import { CACHE_TTL, CACHE_TYPES } from "@/types/cacheType";
 const GET = async (): Promise<NextResponse<AnalysisAPIResponse>> => {
   const session = await auth();
   const headerList = await headers();
-  const timeRange = (headerList.get("X-Time-Range") ?? "7") as TimeRange;
+  const timeRange = headerList.get("X-Time-Range") ?? "7";
+
+  const validRanges: TimeRange[] = ["7", "14", "28", "60", "90"];
+  if (!validRanges.includes(timeRange as TimeRange)) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Invalid time range",
+        data: [],
+      },
+      { status: 400 },
+    );
+  }
 
   if (!session || !session.user) {
     return NextResponse.json(
@@ -26,9 +38,10 @@ const GET = async (): Promise<NextResponse<AnalysisAPIResponse>> => {
   }
 
   try {
-    const customTimeRange = "28";
     // const headers = { "Cache-Control": `public, max-age=${CACHE_TTL * 7}` };
     const headers = { "Cache-Control": "no-cache" };
+    const extendedTimeRange = parseInt(timeRange) > 28 ? true : false;
+    const customTimeRange = (extendedTimeRange ? timeRange : "28") as TimeRange;
 
     // cached data
     const cachedData = await cache.get<rawDataType[]>(CACHE_TYPES.ANALYZE_LOG, [
@@ -50,12 +63,21 @@ const GET = async (): Promise<NextResponse<AnalysisAPIResponse>> => {
     const logs = await analyzeLog(session.user.id, customTimeRange);
 
     // setting cache
-    await cache.set<rawDataType[]>(
-      CACHE_TYPES.ANALYZE_LOG,
-      [session.user.id, customTimeRange],
-      logs,
-      CACHE_TTL * 7, // 7 days
-    );
+    if (extendedTimeRange) {
+      await cache.set<rawDataType[]>(
+        CACHE_TYPES.ANALYZE_LOG,
+        [session.user.id, customTimeRange],
+        logs,
+        CACHE_TTL, // 1 day
+      );
+    } else {
+      await cache.set<rawDataType[]>(
+        CACHE_TYPES.ANALYZE_LOG,
+        [session.user.id, customTimeRange],
+        logs,
+        CACHE_TTL * 7, // 7 days
+      );
+    }
 
     return NextResponse.json(
       {

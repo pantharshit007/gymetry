@@ -28,6 +28,13 @@ async function addLog(logs: LogBody, userId: string) {
         };
       }
 
+      if (adjustDate.getTime() < currentStreak.last_log_date.getTime()) {
+        return {
+          success: false,
+          message: "You can't log in the past!",
+        };
+      }
+
       let newCurrentStreak = 1;
       let newLongestStreak = currentStreak.longest_streak ?? 1;
 

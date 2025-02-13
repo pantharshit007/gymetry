@@ -72,8 +72,9 @@ export default function AnalyticsPage() {
   }
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (Number(timeRange) > 28) fetchData();
+    return;
+  }, [timeRange]);
 
   // Process data from hook
   const {
