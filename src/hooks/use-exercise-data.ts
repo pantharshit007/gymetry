@@ -75,33 +75,31 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
         });
 
         // Sort dates in UTC
-        const sortedDates = Array.from(
-          new Set(
-            exerciseData.map((log) =>
-              format(
-                utcToZonedTime(new Date(log.date), userTimeZone),
-                "yyyy-MM-dd",
-                { timeZone: userTimeZone },
-              ),
-            ),
-          ),
-        ).sort();
+        // const sortedDates = Array.from(
+        //   new Set(
+        //     exerciseData.map((log) =>
+        //       format(
+        //         utcToZonedTime(new Date(log.date), userTimeZone),
+        //         "yyyy-MM-dd",
+        //         { timeZone: userTimeZone },
+        //       ),
+        //     ),
+        //   ),
+        // ).sort();
 
         const workout = log.workout;
 
-        if (!acc[workout]) {
-          acc[workout] = sortedDates.map((date) => ({
-            date,
-            volume: null,
-          }));
+        if (!acc[workout]) acc[workout] = [];
+
+        let dateEntry = acc[workout].find((e) => e.date === formattedDate);
+
+        if (!dateEntry) {
+          dateEntry = { date: formattedDate, volume: 0 };
+          acc[workout].push(dateEntry);
         }
 
-        const dateEntry = acc[workout]?.find(
-          (entry) => entry.date === formattedDate,
-        );
-
-        if (dateEntry) {
-          dateEntry.volume = log.reps! * (log.weight! / 100);
+        if (log.reps && log.weight) {
+          dateEntry.volume = log.reps * (log.weight / 100);
         }
 
         return acc;

@@ -17,7 +17,7 @@ export type MaxWeightExerciseType = {
 };
 
 export type ExerciseProgressDataType = {
-  [key: string]: { date: string; volume: number | null }[];
+  [key: string]: { date: string; volume: number }[];
 };
 
 export type TotalStepsByDateType = {

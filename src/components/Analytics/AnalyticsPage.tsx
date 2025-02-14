@@ -72,6 +72,10 @@ export default function AnalyticsPage() {
   }
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     if (Number(timeRange) > 28) fetchData();
     return;
   }, [timeRange]);
@@ -102,6 +106,8 @@ export default function AnalyticsPage() {
       }),
     );
   }, [processedData]);
+
+  console.log(processedData?.exerciseProgressData);
 
   const exerciseProgressChartData = useMemo(() => {
     if (!processedData) return [];

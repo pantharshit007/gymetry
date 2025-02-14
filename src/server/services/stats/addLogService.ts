@@ -50,7 +50,7 @@ async function addLog(logs: LogBody, userId: string) {
 
       // create daily log
       const [res, updatedStreak] = await Promise.all([
-        tx.dailyLog.createMany({
+        tx.dailyLog.createManyAndReturn({
           data: logs.entries.map((entry) => ({
             userId,
             date: adjustDate,
@@ -90,17 +90,22 @@ async function addLog(logs: LogBody, userId: string) {
         CACHE_TTL + secondsUntilMidnight, // 1 day + remaining seconds
       );
 
-      return { success: res.count > 0 };
+      return {
+        success: res.length === logs.entries.length,
+        data: res,
+      };
     });
 
-    const newEntries: rawDataType[] = logs.entries.map((entry) => ({
-      date: adjustDate,
-      workout: entry.workout,
-      reps: entry.reps || null,
-      weight: entry.weight ? entry.weight * 100 : null,
-      steps: entry.steps || null,
-      distance: entry.distance || null,
-    }));
+    const newEntries = result.data
+      ? result.data.map(({ id, userId, ...rest }) => rest)
+      : logs.entries.map((entry) => ({
+          date: adjustDate,
+          workout: entry.workout,
+          reps: entry.reps || null,
+          weight: entry.weight ? entry.weight * 100 : null,
+          steps: entry.steps || null,
+          distance: entry.distance || null,
+        }));
 
     return {
       success: result.success,
