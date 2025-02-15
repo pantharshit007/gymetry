@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/server/db";
 import { TimeRange } from "@/types/analysis";
 import { rawDataType } from "@/types/dailyLog";

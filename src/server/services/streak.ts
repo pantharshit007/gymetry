@@ -14,6 +14,7 @@ export const fetchUserStreak = async (
   userId: string,
   setCache: boolean = true,
 ) => {
+  "use server";
   try {
     // Check cache for streak data
     const cachedStreak = await cache.get<StreakCache>(CACHE_TYPES.STREAK, [

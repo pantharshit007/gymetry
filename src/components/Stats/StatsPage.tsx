@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { ExerciseEntry, ExerciseVariation } from "@/types/types";
-import { useCurrentUser } from "@/lib/useClientSession";
+import { useCurrentUser } from "@/hooks/useClientSession";
 import { apiClient } from "@/utils/apiClient";
 import { apiEndpoints } from "@/utils/apiRoutes";
 import { toast } from "@/hooks/use-toast";

@@ -1,14 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Download } from "lucide-react";
 import { useRef } from "react";
 import html2canvas from "html2canvas";
-import Image from "next/image";
-import { useCurrentUser } from "@/lib/useClientSession";
+import { Download } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { useCurrentUser } from "@/hooks/useClientSession";
 import UserAvatar from "../User-avatar";
 
 export default function ProfilePage() {
@@ -82,7 +81,7 @@ export default function ProfilePage() {
             <CardContent className="space-y-6 p-6">
               <div className="flex items-center gap-4">
                 <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-white/10">
-                  <UserAvatar className="h-full w-full" />
+                  <UserAvatar imgUrl={user?.image} className="h-full w-full" />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold">{user?.name || "Ryan"}</h3>

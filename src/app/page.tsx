@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { logoutAction } from "@/actions/auth";
-import { useClientSession } from "@/lib/useClientSession";
+import { useClientSession } from "@/hooks/useClientSession";
 import { Button } from "@/components/ui/button";
 
 export default function HomePage() {

@@ -1,3 +1,5 @@
+"use server";
+
 import { isStreakContinues, setTimeZone } from "@/lib/streak";
 import { cache } from "@/server/caches/cache";
 import { db } from "@/server/db";
@@ -21,7 +23,7 @@ async function addLog(logs: LogBody, userId: string) {
       const currentDay = adjustDate.getDate();
       const storedDay = currentStreak.last_log_date.getDate();
 
-      if (currentDay === storedDay) {
+      if (currentDay === storedDay && currentStreak.current_streak > 0) {
         return {
           success: false,
           message: "Already logged today, see you tommorow!",
@@ -64,15 +66,9 @@ async function addLog(logs: LogBody, userId: string) {
 
         // TODO: remove the upsert and move this to onboarding
         // update user's streak
-        tx.streak.upsert({
+        tx.streak.update({
           where: { userId },
-          create: {
-            userId,
-            current_streak: newCurrentStreak,
-            longest_streak: newLongestStreak,
-            last_log_date: adjustDate,
-          },
-          update: {
+          data: {
             current_streak: newCurrentStreak,
             longest_streak: newLongestStreak,
             last_log_date: adjustDate,

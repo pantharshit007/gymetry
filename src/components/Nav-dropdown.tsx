@@ -15,22 +15,32 @@ import {
   LineChart,
   LogOut,
   Settings,
+  ShieldCheck,
   User,
 } from "lucide-react";
 
 import { AppItemProps } from "@/components/AppBar";
 import UserAvatar from "@/components/User-avatar";
 import { logoutAction } from "@/actions/auth";
+import { getServerSession } from "@/lib/getServerSession";
 
+// prettier-ignore
 const NavBarItem = [
-  { id: 1, name: "Dashboard", href: "/dashboard", icon: Home },
-  { id: 2, name: "Enter Stats", href: "/stats", icon: Calendar },
-  { id: 3, name: "Analytics", href: "/analytics", icon: LineChart },
-  { id: 4, name: "Profile", href: "/profile", icon: User },
-  { id: 5, name: "Settings", href: "/settings", icon: Settings },
+  { id: 1, name: "Dashboard", href: "/dashboard", icon: Home, isAdmin: false },
+  { id: 2, name: "Enter Stats", href: "/stats", icon: Calendar, isAdmin: false, },
+  { id: 3, name: "Analytics", href: "/analytics", icon: LineChart, isAdmin: false, },
+  { id: 4, name: "Profile", href: "/profile", icon: User, isAdmin: false },
+  { id: 5, name: "Settings", href: "/settings", icon: Settings, isAdmin: false, },
+  { id: 6, name: "Admin", href: "/admin", icon: ShieldCheck, isAdmin: true },
 ];
 
-function NavDropdown({ isLoggedIn }: { isLoggedIn: boolean }) {
+async function NavDropdown({ isLoggedIn }: { isLoggedIn: boolean }) {
+  const session = await getServerSession();
+  const user = session?.user;
+  const filteredItems = NavBarItem.filter(
+    (item) => !item.isAdmin || user?.role === "ADMIN",
+  );
+
   return (
     <Fragment>
       {!isLoggedIn ? (
@@ -43,11 +53,11 @@ function NavDropdown({ isLoggedIn }: { isLoggedIn: boolean }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-              <UserAvatar />
+              <UserAvatar imgUrl={user?.image} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40" align="end" forceMount>
-            {NavBarItem.map((item) => (
+            {filteredItems.map((item) => (
               <DropDownComponent
                 key={item.id}
                 href={item.href}

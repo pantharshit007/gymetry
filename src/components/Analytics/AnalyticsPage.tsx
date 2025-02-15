@@ -27,7 +27,7 @@ import { ChartProps, TimeRange } from "@/types/analysis";
 import { rawDataType } from "@/types/dailyLog";
 import { apiClient } from "@/utils/apiClient";
 import { toast } from "@/hooks/use-toast";
-import { useCurrentRole } from "@/lib/useClientSession";
+import { useCurrentRole } from "@/hooks/useClientSession";
 
 const timeRangeOptions = [
   { label: "Past 7 days", value: 7, adminOnly: false },
@@ -167,7 +167,7 @@ export default function AnalyticsPage() {
           <SelectContent>
             {timeRangeOptions.map((option) => (
               <SelectItem
-                disabled={role !== "admin" && option.adminOnly}
+                disabled={role !== "ADMIN" && option.adminOnly}
                 key={option.value}
                 value={`${option.value}`}
               >

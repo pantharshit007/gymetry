@@ -17,21 +17,30 @@ import {
   User,
   ChevronLeft,
   AlignLeft,
+  ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { useCollapseState } from "@/store/collapseState";
+import { useCurrentUser } from "@/hooks/useClientSession";
 
+// prettier-ignore
 const AppBarItem = [
-  { id: 1, name: "Dashboard", href: "/dashboard", icon: Home },
-  { id: 2, name: "Enter Stats", href: "/stats", icon: Calendar },
-  { id: 3, name: "Analytics", href: "/analytics", icon: LineChart },
-  { id: 4, name: "Profile", href: "/profile", icon: User },
-  { id: 5, name: "Settings", href: "/settings", icon: Settings },
+  { id: 1, name: "Dashboard", href: "/dashboard", icon: Home, isAdmin: false },
+  { id: 2, name: "Enter Stats", href: "/stats", icon: Calendar, isAdmin: false },
+  { id: 3, name: "Analytics", href: "/analytics", icon: LineChart, isAdmin: false },
+  { id: 4, name: "Profile", href: "/profile", icon: User, isAdmin: false },
+  { id: 5, name: "Settings", href: "/settings", icon: Settings, isAdmin: false },
+  { id: 6, name: "Admin", href: "/admin", icon: ShieldCheck, isAdmin: true },
 ];
 
 function AppBar() {
   const toggle = useCollapseState((state) => state.toggle);
   const collapsed = useCollapseState((state) => state.collapse);
+  const user = useCurrentUser();
+
+  const filteredItems = AppBarItem.filter(
+    (item) => !item.isAdmin || user?.role === "ADMIN",
+  );
   return (
     <>
       {/* Mobile Sidebar */}
@@ -77,7 +86,7 @@ function AppBar() {
       >
         {/* Desktop Sidebar Navigation */}
         <nav className="mt-2 flex-1 space-y-2 p-2">
-          {AppBarItem.map((item) => (
+          {filteredItems.map((item) => (
             <AppItem
               key={item.id}
               href={item.href}

@@ -1,11 +1,13 @@
-"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useCurrentUser } from "@/lib/useClientSession";
 import { cn } from "@/lib/utils";
 
-function UserAvatar({ className }: { className?: string }) {
-  const user = useCurrentUser();
-  const imgUrl = user?.image;
+function UserAvatar({
+  imgUrl,
+  className,
+}: {
+  imgUrl: string | null | undefined;
+  className?: string;
+}) {
   const fallbackImgUrl =
     "https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Ryan";
   return (
