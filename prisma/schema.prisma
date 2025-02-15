@@ -1,96 +1,88 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id            String    @id @default(cuid())     @db.VarChar(30)
-    name          String
-    email         String   @unique
-    emailVerified DateTime?
-    image         String?
-    role          Role      @default(USER)
-    accounts      Account[]
-    log           DailyLog[]
-    streak        Streak?
+  id            String     @id @default(cuid()) @db.VarChar(30)
+  name          String
+  email         String     @unique
+  emailVerified DateTime?
+  image         String?
+  role          Role       @default(USER)
+  accounts      Account[]
+  log           DailyLog[]
+  streak        Streak?
 }
 
-// Necessary for Next auth
 model Account {
-    id                       String  @id @default(cuid())    @db.VarChar(30)
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String? // @db.Text
-    access_token             String? // @db.Text
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String? // @db.Text
-    session_state            String?
-    refresh_token_expires_in Int?
+  id                       String   @id @default(cuid()) @db.VarChar(30)
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String?
+  access_token             String?
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String?
+  session_state            String?
+  refresh_token_expires_in Int?
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model DailyLog {
-    id          String    @id @default(uuid())
-    userId      String
-    date        DateTime  @default(now())
-    workout     Variation
-    reps        Int?
-    weight      Int?      // just multiply by 100 before saving: 75.50 kg -> 7550
-    steps       Int?
-    distance    Int?      // meters
+  id        String    @id @default(uuid())
+  userId    String
+  date      DateTime  @default(now())
+  workout   Variation
+  reps      Int?
+  weight    Int?
+  steps     Int?
+  distance  Int?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    createdAt   DateTime  @default(now())
-    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@index([userId, date])
-    @@index([workout, date])
-    @@unique([userId, date, workout])
+  @@unique([userId, date, workout])
+  @@index([userId, date])
+  @@index([workout, date])
 }
 
 model Streak {
-    id              String          @id @default(cuid())        @db.VarChar(30)
-    userId          String
-    current_streak   Int             @default(0)
-    longest_streak   Int             @default(0)
-    last_log_date     DateTime        @default(now())
+  id             String   @id @default(cuid()) @db.VarChar(30)
+  userId         String   @unique
+  current_streak Int      @default(0)
+  longest_streak Int      @default(0)
+  last_log_date  DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@unique([userId])
-    @@index([current_streak])
-    @@index([longest_streak])
+  @@index([current_streak])
+  @@index([longest_streak])
 }
 
 enum Variation {
-    BICEPS
-    TRICEPS
-    CHEST
-    BACK
-    SHOULDER
-    HAMSTRING
-    QUADS
-    DEADLIFT
-    WALK
+  BICEPS
+  TRICEPS
+  CHEST
+  BACK
+  SHOULDER
+  HAMSTRING
+  QUADS
+  DEADLIFT
+  WALK
 }
 
 enum Role {
-    USER
-    ADMIN
+  USER
+  ADMIN
+  PRO
 }

@@ -6,8 +6,7 @@ import { JWT } from "next-auth/jwt";
 
 import { db } from "@/server/db";
 import { env } from "@/env";
-
-export type UserRole = "user" | "admin";
+import { Role } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -19,12 +18,12 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
-      role: UserRole;
+      role: Role;
     } & DefaultSession["user"];
   }
 
   interface User {
-    role?: UserRole;
+    role?: Role;
   }
 }
 
@@ -32,7 +31,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     user: {
       id: string;
-      role: UserRole;
+      role: Role;
     };
   }
 }
@@ -48,6 +47,21 @@ export const authConfig = {
     error: "/error",
   },
 
+  events: {
+    createUser: async ({ user }) => {
+      if (user && user.id) {
+        await db.streak.create({
+          data: {
+            userId: user.id,
+            current_streak: 0,
+            longest_streak: 0,
+            last_log_date: new Date(),
+          },
+        });
+      }
+    },
+  },
+
   providers: [
     GoogleProvider({
       clientId: env.AUTH_GOOGLE_ID,
@@ -59,7 +73,7 @@ export const authConfig = {
     async session({ session, token }) {
       if (token?.sub && token?.role) {
         session.user.id = token.sub;
-        session.user.role = token.role as UserRole;
+        session.user.role = token.role as Role;
       }
       return session;
     },
