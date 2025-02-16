@@ -74,19 +74,6 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
           timeZone: userTimeZone,
         });
 
-        // Sort dates in UTC
-        // const sortedDates = Array.from(
-        //   new Set(
-        //     exerciseData.map((log) =>
-        //       format(
-        //         utcToZonedTime(new Date(log.date), userTimeZone),
-        //         "yyyy-MM-dd",
-        //         { timeZone: userTimeZone },
-        //       ),
-        //     ),
-        //   ),
-        // ).sort();
-
         const workout = log.workout;
 
         if (!acc[workout]) acc[workout] = [];

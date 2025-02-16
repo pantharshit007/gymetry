@@ -13,7 +13,6 @@ import {
   Calendar,
   Home,
   LineChart,
-  LogOut,
   Settings,
   ShieldCheck,
   User,
@@ -21,8 +20,8 @@ import {
 
 import { AppItemProps } from "@/components/AppBar";
 import UserAvatar from "@/components/User-avatar";
-import { logoutAction } from "@/actions/auth";
 import { getServerSession } from "@/lib/getServerSession";
+import LogoutButton from "./LogoutButton";
 
 // prettier-ignore
 const NavBarItem = [
@@ -66,9 +65,8 @@ async function NavDropdown({ isLoggedIn }: { isLoggedIn: boolean }) {
               />
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logoutAction}>
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
+            <DropdownMenuItem>
+              <LogoutButton />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

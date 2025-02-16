@@ -1,19 +1,24 @@
+import { fromZonedTime } from "date-fns-tz";
+
 interface TimeZone {
   date: Date | string;
   timeZone?: string;
 }
 
 /**
- * update dates in IST (default) timezone
+ * update dates in UTC timezone
  * @param date: Date
- * @param timeZone: string
+ * @param timeZone?: string
  * @returns Date
  */
 export const setTimeZone = ({ date, timeZone = "Asia/Kolkata" }: TimeZone) => {
   const options = { timeZone, hour12: false };
-  // const dateTimeString = new Date(date).toLocaleString("en-US", options);
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const dateTime = new Date(date);
-  return dateTime;
+  const utcDate = fromZonedTime(dateTime, userTimeZone);
+
+  return utcDate;
+
   //   dateTime.setHours(dateTime.getHours() + 5);
   //   dateTime.setMinutes(dateTime.getMinutes() + 30);
 };

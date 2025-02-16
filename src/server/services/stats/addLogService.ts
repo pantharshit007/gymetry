@@ -38,7 +38,7 @@ async function addLog(logs: LogBody, userId: string) {
       }
 
       let newCurrentStreak = 1;
-      let newLongestStreak = currentStreak.longest_streak ?? 1;
+      let newLongestStreak = Math.max(currentStreak.longest_streak, 1);
 
       const isConsecutive = isStreakContinues(
         currentStreak.last_log_date,
@@ -64,7 +64,6 @@ async function addLog(logs: LogBody, userId: string) {
           })),
         }),
 
-        // TODO: remove the upsert and move this to onboarding
         // update user's streak
         tx.streak.update({
           where: { userId },
