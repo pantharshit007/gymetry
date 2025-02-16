@@ -13,7 +13,7 @@
 - [x] add toast notifications for success and error messages.
 - [x] fix the `new Date()` problem with the setUpdate method, in `use-exercise-data.ts`.
 - [x] fix option for when user clicks on 60 days option, it should bring 60days data.
-- [ ] add 2 option in `/analytics` page, card/table with card add view more and with table add pagination since raw data can be too big.
+- [x] add 2 option in `/analytics` page, card/table with card add view more and with table add pagination since raw data can be too big.
 
 <!-- TODOs Backend  -->
 
