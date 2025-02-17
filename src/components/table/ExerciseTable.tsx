@@ -1,10 +1,10 @@
 "use client";
 
-import React, { memo, useState } from "react";
+import React, { memo, use, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { rawDataType } from "@/types/dailyLog";
 import Loader from "@/components/Loader";
-import { Activity, List, TableIcon } from "lucide-react";
+import { Activity, ArrowUpDown, List, TableIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Table,
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table";
 
 interface ExerciseTableProps {
-  data: {
+  rawData: {
     date: string;
     exercises: rawDataType[];
   }[];
@@ -27,7 +27,8 @@ type ViewMode = "table" | "list";
 
 const ITEMS_PER_PAGE = 10;
 
-function ExerciseTableComponent({ data, isLoading }: ExerciseTableProps) {
+function ExerciseTableComponent({ rawData, isLoading }: ExerciseTableProps) {
+  const [data, setData] = useState(rawData);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [visibleItems, setVisibleItems] = useState<number>(5);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -47,6 +48,14 @@ function ExerciseTableComponent({ data, isLoading }: ExerciseTableProps) {
     setCurrentPage(page);
   };
 
+  const handleReverse = () => {
+    setData((prevData) => [...prevData].reverse());
+  };
+
+  useEffect(() => {
+    setData(rawData);
+  }, [rawData]);
+
   if (isLoading) {
     return <Loader />;
   }
@@ -54,7 +63,12 @@ function ExerciseTableComponent({ data, isLoading }: ExerciseTableProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-medium">Exercise Log</CardTitle>
+        <div className="flex items-center space-x-2">
+          <CardTitle className="text-lg font-medium">Exercise Log</CardTitle>
+          <Button onClick={handleReverse} size="icon">
+            <ArrowUpDown className="h-4 w-4 text-white" />
+          </Button>
+        </div>
         <div className="flex space-x-2">
           <Button
             variant={viewMode === "list" ? "default" : "outline"}

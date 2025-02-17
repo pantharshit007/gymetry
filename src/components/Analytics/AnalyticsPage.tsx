@@ -107,8 +107,6 @@ export default function AnalyticsPage() {
     );
   }, [processedData]);
 
-  console.log(processedData?.exerciseProgressData);
-
   const exerciseProgressChartData = useMemo(() => {
     if (!processedData) return [];
     return Object.entries(processedData.exerciseProgressData).map(
@@ -137,6 +135,14 @@ export default function AnalyticsPage() {
       distance: log.distance,
     }));
   }, [processedData]);
+
+  const reversedExerciseLogData = useMemo(() => {
+    return [...ExerciseLogData].reverse();
+  }, [ExerciseLogData]);
+
+  const reversedWalkLogData = useMemo(() => {
+    return [...WalkLogData].reverse();
+  }, [WalkLogData]);
 
   // Callbacks for event handlers
   const handleTimeRangeChange = useCallback((value: TimeRange) => {
@@ -201,12 +207,12 @@ export default function AnalyticsPage() {
           />
           {/* Data table - section 1*/}
           <ExerciseTable
-            data={ExerciseLogData.reverse()}
+            rawData={reversedExerciseLogData}
             isLoading={isLoading || isPending}
           />
           {/* Data table - section 2*/}
           <WalkTable
-            data={WalkLogData.reverse()}
+            rawData={reversedWalkLogData}
             isLoading={isLoading || isPending}
           />
         </>

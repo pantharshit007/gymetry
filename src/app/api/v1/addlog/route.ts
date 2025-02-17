@@ -14,6 +14,7 @@ export const POST = async (
   const session = await auth();
   const headerList = await headers();
   const userId = headerList.get("X-User-Id");
+  const timeZone = headerList.get("X-Time-Zone");
 
   if (!session || !session.user) {
     return NextResponse.json(
@@ -45,7 +46,7 @@ export const POST = async (
       );
     }
 
-    const res = await addLog(log, session.user.id);
+    const res = await addLog(log, session.user.id, timeZone);
     if (!res.success || !res.data) {
       return NextResponse.json(
         { success: false, message: res.message },

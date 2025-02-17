@@ -1,10 +1,10 @@
 "use client";
 
-import React, { memo, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Loader from "@/components/Loader";
 import { format } from "date-fns-tz";
-import { Footprints, List, TableIcon } from "lucide-react";
+import { ArrowUpDown, Footprints, List, TableIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Table,
@@ -14,9 +14,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { adjustDateForTimezone } from "@/hooks/use-exercise-data";
 
 interface WalkTableProps {
-  data: {
+  rawData: {
     date: Date;
     steps: number | null;
     distance: number | null;
@@ -28,7 +29,8 @@ type ViewMode = "table" | "list";
 
 const ITEMS_PER_PAGE = 10;
 
-function WalkTableComponent({ data, isLoading }: WalkTableProps) {
+function WalkTableComponent({ rawData, isLoading }: WalkTableProps) {
+  const [data, setData] = useState(rawData);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [visibleItems, setVisibleItems] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,10 +45,18 @@ function WalkTableComponent({ data, isLoading }: WalkTableProps) {
     setCurrentPage(page);
   };
 
+  const handleReverse = () => {
+    setData((prevData) => [...prevData].reverse());
+  };
+
   const paginatedData = data.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
   );
+
+  useEffect(() => {
+    setData(rawData);
+  }, [rawData]);
 
   if (isLoading) {
     return <Loader />;
@@ -57,7 +67,12 @@ function WalkTableComponent({ data, isLoading }: WalkTableProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-medium">Walk Data</CardTitle>
+        <div className="flex items-center space-x-2">
+          <CardTitle className="text-lg font-medium">Walk Log</CardTitle>
+          <Button onClick={handleReverse} size="icon">
+            <ArrowUpDown className="h-4 w-4 text-white" />
+          </Button>
+        </div>
 
         <div className="flex space-x-2">
           <Button
@@ -86,7 +101,9 @@ function WalkTableComponent({ data, isLoading }: WalkTableProps) {
               >
                 <div>
                   <p className="font-medium tracking-wider text-orange-500">
-                    {format(date, "PP", { timeZone: userTimeZone })}
+                    {format(adjustDateForTimezone(date, userTimeZone), "PP", {
+                      timeZone: userTimeZone,
+                    })}
                   </p>
                   <p>Steps: {steps}</p>
                   <p>
@@ -126,7 +143,9 @@ function WalkTableComponent({ data, isLoading }: WalkTableProps) {
                 {paginatedData.map(({ date, steps, distance }, index) => (
                   <TableRow key={index}>
                     <TableCell>
-                      {format(date, "PP", { timeZone: userTimeZone })}
+                      {format(adjustDateForTimezone(date, userTimeZone), "PP", {
+                        timeZone: userTimeZone,
+                      })}
                     </TableCell>
                     <TableCell>{steps || "N/A"}</TableCell>
                     <TableCell>

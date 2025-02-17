@@ -77,11 +77,14 @@ export default function StatsPage() {
 
     startTransition(async () => {
       try {
+        const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
         const res = await apiClient({
           url: apiEndpoints.ADD_DAILYLOG,
           method: "POST",
           headers: {
             "X-User-Id": user.id,
+            "X-Time-Zone": userTimeZone,
           },
           data: JSON.stringify({ date: date.toISOString(), entries }),
         });

@@ -55,10 +55,10 @@ export const fetchUserStreak = async (
   }
 };
 
-// Helper: Get seconds until midnight IST
+// Helper: Get seconds until midnight UTC
 export function getSecondsUntilMidnight(): number {
-  const now = setTimeZone({ date: new Date() });
-  const midnight = new Date(now);
+  const now = new Date();
+  const midnight = new Date(now.toISOString());
   midnight.setHours(24, 0, 0, 0); // next midnight (IST)
 
   return Math.floor((midnight.getTime() - now.getTime()) / 1000);

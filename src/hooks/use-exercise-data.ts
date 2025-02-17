@@ -9,6 +9,7 @@ import {
 } from "@/types/analysis";
 import { rawDataType } from "@/types/dailyLog";
 import { useMemo, useState } from "react";
+import { addDays } from "date-fns";
 
 export function useExerciseData(rawData: rawDataType[], timeRange: string) {
   const [error, setError] = useState<Error | null>(null);
@@ -29,7 +30,7 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
       const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       // Calculate date range in UTC
-      const now = new Date();
+      const now = rawData[-1]?.date ?? new Date();
       const daysInMilliseconds = Number(timeRange) * 24 * 60 * 60 * 1000;
       const startDate = new Date(now.getTime() - daysInMilliseconds);
 
@@ -44,7 +45,7 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
       // Group exercises by date (displayed in user's timezone)
       const exercisesByDate = exerciseData.reduce((acc, log) => {
         const utcDate = new Date(log.date);
-        const userDate = utcToZonedTime(utcDate, userTimeZone);
+        const userDate = adjustDateForTimezone(utcDate, userTimeZone);
         const formattedDate = format(userDate, "PP", {
           timeZone: userTimeZone,
         });
@@ -68,24 +69,36 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
       // Process exercise progress (display dates in user's timezone)
       const exerciseProgressData = exerciseData.reduce((acc, log) => {
         const utcDate = new Date(log.date);
-        const userDate = utcToZonedTime(utcDate, userTimeZone);
+        const userDate = adjustDateForTimezone(utcDate, userTimeZone);
 
         const formattedDate = format(userDate, "yyyy-MM-dd", {
           timeZone: userTimeZone,
         });
 
+        const sortedDates = [
+          ...new Set(
+            exerciseData.map((e) =>
+              format(
+                adjustDateForTimezone(e.date, userTimeZone),
+                "yyyy-MM-dd",
+                { timeZone: userTimeZone },
+              ),
+            ),
+          ),
+        ];
+
         const workout = log.workout;
 
-        if (!acc[workout]) acc[workout] = [];
+        if (!acc[workout]) {
+          acc[workout] = sortedDates.map((date) => ({
+            date,
+            volume: 0,
+          }));
+        }
 
         let dateEntry = acc[workout].find((e) => e.date === formattedDate);
 
-        if (!dateEntry) {
-          dateEntry = { date: formattedDate, volume: 0 };
-          acc[workout].push(dateEntry);
-        }
-
-        if (log.reps && log.weight) {
+        if (dateEntry && log.reps && log.weight) {
           dateEntry.volume = log.reps * (log.weight / 100);
         }
 
@@ -95,7 +108,7 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
       // Process steps data (display dates in user's timezone)
       const totalStepsByDate = walkData.reduce((acc, log) => {
         const utcDate = new Date(log.date);
-        const userDate = utcToZonedTime(utcDate, userTimeZone);
+        const userDate = adjustDateForTimezone(utcDate, userTimeZone);
         const formattedDate = format(userDate, "d/M", {
           timeZone: userTimeZone,
         });
@@ -127,3 +140,30 @@ export function useExerciseData(rawData: rawDataType[], timeRange: string) {
 
   return { data: processedData, isLoading, error };
 }
+
+/**
+ * special handler for timezone where the user's timezone is ahead of UTC and alot of sh*t happens :/
+ * @param utcDate
+ * @param userTimeZone
+ * @returns
+ */
+export const adjustDateForTimezone = (utcDate: Date, userTimeZone: string) => {
+  const userDate = utcToZonedTime(utcDate, userTimeZone);
+  const userHours = parseInt(format(userDate, "H", { timeZone: userTimeZone }));
+  const userMins = parseInt(format(userDate, "m", { timeZone: userTimeZone }));
+
+  // Calculate the user's timezone offset in hours and minutes
+  const utcOffset = -new Date().getTimezoneOffset() / 60; // Offset in hours
+  const offsetHours = Math.floor(utcOffset);
+  const offsetMinutes = Math.round((utcOffset - offsetHours) * 60);
+
+  // If the local time is between 12:00 AM and the user's timezone offset, subtract one day
+  if (
+    userHours < offsetHours ||
+    (userHours === offsetHours && userMins < offsetMinutes)
+  ) {
+    return addDays(userDate, -1);
+  }
+
+  return userDate;
+};

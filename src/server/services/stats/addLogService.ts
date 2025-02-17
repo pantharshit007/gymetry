@@ -12,8 +12,8 @@ import { fetchUserStreak, getSecondsUntilMidnight } from "../streak";
  * service to add present day's log to the database
  * @param logs: LogBody
  */
-async function addLog(logs: LogBody, userId: string) {
-  const adjustDate = setTimeZone({ date: logs.date });
+async function addLog(logs: LogBody, userId: string, timeZone?: string | null) {
+  const adjustDate = setTimeZone({ date: logs.date, timeZone });
 
   try {
     const result = await db.$transaction(async (tx) => {
@@ -43,6 +43,7 @@ async function addLog(logs: LogBody, userId: string) {
       const isConsecutive = isStreakContinues(
         currentStreak.last_log_date,
         adjustDate,
+        timeZone,
       );
 
       if (isConsecutive) {
