@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { cache } from "@/server/caches/cache";
 import { CACHE_TYPES } from "@/types/cacheType";
 import { rawDataType } from "@/types/dailyLog";
+import { rateLimiter } from "@/lib/ratelimit";
 
 export const POST = async (
   req: NextRequest,
@@ -15,6 +16,22 @@ export const POST = async (
   const headerList = await headers();
   const userId = headerList.get("X-User-Id");
   const timeZone = headerList.get("X-Time-Zone");
+  const ip =
+    headerList.get("x-forwarded-for") ||
+    headerList.get("x-real-ip") ||
+    headerList.get("cf-connecting-ip") ||
+    headerList.get("true-client-ip");
+
+  const { success } = await rateLimiter.isAllowed(ip!);
+  if (!success) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Too many requests",
+      },
+      { status: 429 },
+    );
+  }
 
   if (!session || !session.user) {
     return NextResponse.json(

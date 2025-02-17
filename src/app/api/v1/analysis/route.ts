@@ -8,11 +8,30 @@ import { analyzeLog } from "@/server/services/analytics/analyzeLogService";
 import { cache } from "@/server/caches/cache";
 import { rawDataType } from "@/types/dailyLog";
 import { CACHE_TTL, CACHE_TYPES } from "@/types/cacheType";
+import { rateLimiter } from "@/lib/ratelimit";
 
 const GET = async (): Promise<NextResponse<AnalysisAPIResponse>> => {
   const session = await auth();
   const headerList = await headers();
   const timeRange = headerList.get("X-Time-Range") ?? "7";
+  const ip =
+    headerList.get("x-forwarded-for") ||
+    headerList.get("x-real-ip") ||
+    headerList.get("cf-connecting-ip") ||
+    headerList.get("true-client-ip") ||
+    "127.0.0.1";
+
+  const { success } = await rateLimiter.isAllowed(ip!);
+  if (!success) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Too many requests",
+        data: [],
+      },
+      { status: 429 },
+    );
+  }
 
   const validRanges: TimeRange[] = ["7", "14", "28", "60", "90"];
   if (!validRanges.includes(timeRange as TimeRange)) {
