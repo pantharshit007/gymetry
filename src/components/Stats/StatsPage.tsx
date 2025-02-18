@@ -27,6 +27,7 @@ import { useCurrentUser } from "@/hooks/useClientSession";
 import { apiClient } from "@/utils/apiClient";
 import { apiEndpoints } from "@/utils/apiRoutes";
 import { toast } from "@/hooks/use-toast";
+import posthog from "posthog-js";
 
 export default function StatsPage() {
   const [isPending, startTransition] = useTransition();
@@ -99,6 +100,14 @@ export default function StatsPage() {
 
           return;
         }
+
+        // track analytics: log created
+        posthog.capture("log_created", {
+          $current_url: window.location.href,
+          user_id: user.id,
+          date: date.toISOString(),
+          num_of_entries: entries.length,
+        });
 
         toast({
           title: "Success",
