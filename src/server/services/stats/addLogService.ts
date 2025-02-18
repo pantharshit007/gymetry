@@ -46,6 +46,8 @@ async function addLog(logs: LogBody, userId: string, timeZone?: string | null) {
         timeZone,
       );
 
+      console.log(`isConsecutive:userId:${userId}`, isConsecutive);
+
       if (isConsecutive) {
         newCurrentStreak = currentStreak.current_streak + 1;
         newLongestStreak = Math.max(newLongestStreak, newCurrentStreak);

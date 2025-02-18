@@ -13,8 +13,7 @@ interface TimeZone {
  */
 export const setTimeZone = ({ date, timeZone }: TimeZone) => {
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const dateTime = new Date(date);
-  const utcDate = fromZonedTime(dateTime, timeZone ?? userTimeZone);
+  const utcDate = new Date();
 
   return utcDate;
 
@@ -35,7 +34,6 @@ export const isStreakContinues = (
 ): boolean => {
   const lastLog = setTimeZone({ date: date1, timeZone });
   const current = setTimeZone({ date: date2, timeZone });
-  current;
 
   // Subtract 1 day from current date
   current.setDate(current.getDate() - 1);
