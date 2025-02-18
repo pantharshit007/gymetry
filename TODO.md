@@ -24,8 +24,8 @@
 - [ ] add docker compose file.
 - [x] add rate limiting
 - [ ] add rate limiting for /auth point: Google OAuth.
-- [ ] add analytics with posthog.
-- [ ] some bug with the streak calculation.
+- [x] add analytics with posthog.
+- [-] some bug with the streak calculation.
 - [x] in analyzeLogService, we are subtracting from current date if user stops for a long time then the last x days we will fetch wouldn't be in that range it should be from the last recorded date till the x days.
 - [ ] store user gender in the database.
 - [x] there is some bug in the streak calculation, when new user logs for first time longest stays on 0 will check later on.

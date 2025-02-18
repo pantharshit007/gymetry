@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import "@/styles/globals.css";
-import Provider from "@/app/provider";
+import Provider from "@/app/_providers/provider";
+import { PostHogProvider } from "@/app/_providers/posthog-provider";
 import { auth } from "@/server/auth/auth";
 import { NavBar } from "@/components/NavBar";
 import { Toaster } from "@/components/ui/toaster";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,11 +25,14 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <Provider session={session}>
-          <div className="flex min-h-screen flex-col">
-            <NavBar />
-            {children}
-            <Toaster />
-          </div>
+          <PostHogProvider>
+            <div className="flex min-h-screen flex-col">
+              <NavBar />
+              {children}
+              <Toaster />
+              <Analytics />
+            </div>
+          </PostHogProvider>
         </Provider>
       </body>
     </html>
