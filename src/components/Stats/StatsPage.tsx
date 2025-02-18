@@ -151,26 +151,13 @@ export default function StatsPage() {
       <div className="flex flex-col items-center justify-between gap-4 max-md:flex-row sm:flex-row">
         <h1 className="text-3xl font-bold max-md:text-2xl">Enter Stats</h1>
 
-        {/* CALENDER */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-[240px] justify-start text-left font-normal max-md:w-[200px]"
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="end">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(date) => date && setDate(date)}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
+        <Button
+          variant="outline"
+          className="w-[240px] justify-start text-left font-normal max-md:w-[200px]"
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          {format(date, "PPP")}
+        </Button>
       </div>
 
       <Card>
