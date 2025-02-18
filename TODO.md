@@ -22,7 +22,8 @@
 - [x] [!important] add redis for caching, to add last log date and check streak based on last log date.
 - [x] update the cache when user add new log in the service, currently it will be staled till the next 7 days.
 - [ ] add docker compose file.
-- [-] add rate limiting
+- [x] add rate limiting
+- [ ] add rate limiting for /auth point: Google OAuth.
 - [ ] add analytics with posthog.
 - [ ] some bug with the streak calculation.
 - [ ] in analyzeLogService, we are subtracting from current date if user stops for a long time then the last x days we will fetch wouldn't be in that range it should be from the last recorded date till the x days.

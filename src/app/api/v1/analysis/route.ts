@@ -24,11 +24,7 @@ const GET = async (): Promise<NextResponse<AnalysisAPIResponse>> => {
   const { success } = await rateLimiter.isAllowed(ip!);
   if (!success) {
     return NextResponse.json(
-      {
-        success: false,
-        message: "Too many requests",
-        data: [],
-      },
+      { success: false, message: "Too many requests", data: [] },
       { status: 429 },
     );
   }

@@ -25,10 +25,7 @@ export const POST = async (
   const { success } = await rateLimiter.isAllowed(ip!);
   if (!success) {
     return NextResponse.json(
-      {
-        success: false,
-        message: "Too many requests",
-      },
+      { success: false, message: "Too many requests" },
       { status: 429 },
     );
   }

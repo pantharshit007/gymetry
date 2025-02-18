@@ -41,27 +41,6 @@ interface UserData {
 //   { month: "Jun", users: 250 },
 // ];
 
-const recentUsers = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    joinDate: "2025-02-01",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    joinDate: "2025-02-03",
-  },
-  {
-    id: 3,
-    name: "Bob Johnson",
-    email: "bob@example.com",
-    joinDate: "2025-02-05",
-  },
-];
-
 const totalWorkouts = 1500;
 const activeUsers = 180;
 const reportedIssues = 5;
