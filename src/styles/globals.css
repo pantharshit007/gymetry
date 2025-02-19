@@ -69,6 +69,11 @@
     @apply border-border;
   }
 
+  :root {
+    --font-sans: "Inter", sans-serif;
+    --font-heading: "Bricolage Grotesque", sans-serif;
+  }
+
   body {
     @apply bg-background text-foreground;
   }

@@ -44,7 +44,7 @@ async function NavDropdown({ isLoggedIn }: { isLoggedIn: boolean }) {
     <Fragment>
       {!isLoggedIn ? (
         // Not logged in user
-        <Button asChild>
+        <Button asChild variant={"marketing"}>
           <Link href="/login">Get Started</Link>
         </Button>
       ) : (
