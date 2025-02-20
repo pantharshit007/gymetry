@@ -10,7 +10,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/react";
 import { cn } from "@/lib/utils";
 import { siteConfig } from "@/config/siteConfig";
-import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 

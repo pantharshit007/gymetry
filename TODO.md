@@ -15,6 +15,7 @@
 - [x] fix option for when user clicks on 60 days option, it should bring 60days data.
 - [x] add 2 option in `/analytics` page, card/table with card add view more and with table add pagination since raw data can be too big.
 - [ ] why is `/about` page rendering multiple times? in terminal, it is showing the same page multiple times, hmr.
+- [ ] add streak data to zustand to be able to fetch in profile page, along side other handy data.
 
 ```bash
 ○ Compiling / ...

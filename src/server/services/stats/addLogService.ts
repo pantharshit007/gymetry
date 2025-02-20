@@ -73,7 +73,7 @@ async function addLog(logs: LogBody, userId: string, timeZone?: string | null) {
           data: {
             current_streak: newCurrentStreak,
             longest_streak: newLongestStreak,
-            // last_log_date: adjustDate,
+            last_log_date: new Date(),
           },
         }),
       ]);
