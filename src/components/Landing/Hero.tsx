@@ -3,11 +3,13 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+const IMG_MODE: "dark" | "light" = "dark";
+
 export default function Hero() {
   return (
     <section className="container flex min-h-[calc(100vh-3.5rem)] max-w-screen-2xl flex-col items-center justify-center space-y-8 py-24 text-center md:py-32">
       <div className="space-y-4">
-        <h1 className="font-heading bg-gradient-to-br from-foreground from-30% via-foreground/90 to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl lg:text-7xl">
+        <h1 className="bg-gradient-to-br from-foreground from-30% via-foreground/90 to-foreground/70 bg-clip-text font-heading text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl lg:text-7xl">
           Track Your Progress,
           <br />
           Visualize Your Gains
@@ -30,11 +32,13 @@ export default function Hero() {
         </Button>
       </div>
       <div className="relative z-40 mt-16 w-full max-w-3xl">
-        <div className="from-brand absolute -inset-[0.3] bg-gradient-to-r to-purple-600 opacity-75 blur"></div>
+        <div className="absolute -inset-[0.3rem] bg-gradient-to-r from-brand to-purple-600 opacity-75 blur" />
         <div className="relative">
           <Image
-            src="/img/dashboard_dark.png"
-            // src="/img/dashboard_light.png"
+            src={
+              `https://res.cloudinary.com/di0av3xly/image/upload/v1740043755/Gymetry/dashboard_${IMG_MODE}.png` ||
+              `/img/dashboard_${IMG_MODE}.png`
+            }
             alt="Gymetry Dashboard"
             width={1200}
             height={675}

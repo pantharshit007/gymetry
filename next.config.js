@@ -14,6 +14,12 @@ const config = {
                 port: "",
                 pathname: "/**",
             },
+            {
+                protocol: "https",
+                hostname: "res.cloudinary.com",
+                port: "",
+                pathname: "/**",
+            }
         ],
         dangerouslyAllowSVG: true,
         formats: ["image/avif", "image/webp"],

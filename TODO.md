@@ -14,7 +14,33 @@
 - [x] fix the `new Date()` problem with the setUpdate method, in `use-exercise-data.ts`.
 - [x] fix option for when user clicks on 60 days option, it should bring 60days data.
 - [x] add 2 option in `/analytics` page, card/table with card add view more and with table add pagination since raw data can be too big.
-- [ ] add admin route on navbar dropdown.
+- [ ] why is `/about` page rendering multiple times? in terminal, it is showing the same page multiple times, hmr.
+
+```bash
+○ Compiling / ...
+ ✓ Compiled in 559ms
+ ✓ Compiled / in 718ms
+ GET / 200 in 1368ms
+ GET /about 200 in 1414ms
+ GET / 200 in 430ms
+ GET /about 200 in 444ms
+ GET / 200 in 326ms
+ GET /about 200 in 385ms
+ GET / 200 in 338ms
+ GET /about 200 in 386ms
+ GET / 200 in 360ms
+ GET /about 200 in 359ms
+ GET / 200 in 338ms
+ GET /about 200 in 341ms
+ GET / 200 in 333ms
+ GET /about 200 in 363ms
+ GET / 200 in 289ms
+ GET /about 200 in 381ms
+ GET /favicon.ico?favicon.da171a61.ico 200 in 351ms
+ GET /favicon.ico 200 in 401ms
+ GET /favicon.ico?favicon.da171a61.ico 200 in 233ms
+ GET /favicon.ico 200 in 240ms
+```
 
 <!-- TODOs Backend  -->
 
