@@ -21,6 +21,8 @@
   </a>
 </p>
 
+[![Landing page](./public/img/banner.png)](https://www.tella.tv/video/randoms-video-1vbv)
+
 ## About
 
 Gymetry makes it easy to log your daily workouts and visualize your fitness journey with powerful data insights. Whether you're tracking weights, reps, or even your walking activity, Gymetry offers an intuitive dashboard to monitor progress over time.

@@ -54,7 +54,15 @@ export default function Page() {
           </p>
         </CardContent>
       </Card>
-
+      <div className="mx-auto md:w-[60%]">
+        <div className="relative w-full pt-[56.25%]">
+          <iframe
+            src="https://www.tella.tv/video/cm7djcszw00390bl80oq91vbv/embed?b=1&title=0&a=1&loop=1&t=0&muted=0&wt=0"
+            className="absolute left-0 top-0 h-full w-full rounded-lg shadow-2xl"
+            allowFullScreen
+          />
+        </div>
+      </div>
       <Footer />
     </div>
   );

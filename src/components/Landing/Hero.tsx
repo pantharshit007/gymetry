@@ -4,6 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 
 const IMG_MODE: "dark" | "light" = "dark";
+const IMG =
+  IMG_MODE === "dark"
+    ? "https://res.cloudinary.com/di0av3xly/image/upload/v1740074190/Gymetry/dashboard_dark.png"
+    : "https://res.cloudinary.com/di0av3xly/image/upload/v1740074204/Gymetry/dashboard_light.png";
 
 export default function Hero() {
   return (
@@ -35,10 +39,7 @@ export default function Hero() {
         <div className="absolute -inset-[0.3rem] bg-gradient-to-r from-brand to-purple-600 opacity-75 blur" />
         <div className="relative">
           <Image
-            src={
-              `https://res.cloudinary.com/di0av3xly/image/upload/v1740043755/Gymetry/dashboard_${IMG_MODE}.png` ||
-              `/img/dashboard_${IMG_MODE}.png`
-            }
+            src={IMG || `/img/dashboard_${IMG_MODE}.png`}
             alt="Gymetry Dashboard"
             width={1200}
             height={675}
