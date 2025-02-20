@@ -4,7 +4,7 @@ import { Metadata } from "next";
 const TITLE = "Gymetry - Track Your Progress, Visualize Your Gains";
 const DESCRIPTION =
   "Easily log your daily workouts and visualize your fitness journey with powerful data insights.";
-const PREVIEW_URL = "/img/preview.png";
+const PREVIEW_URL = "https://res.cloudinary.com/di0av3xly/image/upload/v1740079520/Gymetry/preview_nej5ie.png" ?? "/img/preview.png";
 const BASE_URL = "https://gymetry.pantharhsit007.tech";
 const ALT_TITLE = "Simple, smooth, and fast dashboard for your gym workouts";
 
