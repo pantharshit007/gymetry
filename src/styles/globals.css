@@ -69,7 +69,33 @@
     @apply border-border;
   }
 
+  :root {
+    --font-sans: "Inter", sans-serif;
+    --font-heading: "Bricolage Grotesque", sans-serif;
+  }
+
   body {
     @apply bg-background text-foreground;
+    scroll-behavior: smooth;
   }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(0, 0%, 95%, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: orange;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: orange;
 }

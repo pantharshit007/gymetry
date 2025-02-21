@@ -63,6 +63,7 @@ model Streak {
   current_streak Int      @default(0)
   longest_streak Int      @default(0)
   last_log_date  DateTime @default(now())
+  updatedAt      DateTime @updatedAt  @default(now())
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([current_streak])

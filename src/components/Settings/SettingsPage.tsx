@@ -74,7 +74,7 @@ export default function SettingsPage() {
                   Receive email notifications about your progress
                 </p>
               </div>
-              <Switch />
+              <Switch disabled />
             </div>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
@@ -83,18 +83,9 @@ export default function SettingsPage() {
                   Get a weekly summary of your workouts
                 </p>
               </div>
-              <Switch />
+              <Switch disabled />
             </div>
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <Label>Dark Mode</Label>
-                <p className="text-sm text-muted-foreground">
-                  Toggle dark mode theme
-                </p>
-              </div>
-              <Switch />
-            </div>
-            <Button>Save Preferences</Button>
+            <Button disabled>Save Preferences</Button>
           </CardContent>
         </Card>
 

@@ -67,7 +67,7 @@ function DashboardPage() {
           <DashboardCard
             title="Total Workouts"
             icon={Dumbbell}
-            content="24"
+            content="-"
             description="+2 from last month"
           />
           <DashboardCard
@@ -75,17 +75,18 @@ function DashboardPage() {
             icon={Trophy}
             content={`${streak?.current_streak ?? 0} days`}
             description={`Personal best: ${streak?.longest_streak ?? 0} days`}
+            className="border-[1px] border-brand"
           />
           <DashboardCard
             title="Total Volume"
             icon={Activity}
-            content="12,450 kg"
+            content="- kg"
             description="+15% from last week"
           />
           <DashboardCard
             title="Goals Completed"
             icon={Target}
-            content="3/5"
+            content="-/5"
             description="2 goals remaining"
           />
         </div>

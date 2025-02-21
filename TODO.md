@@ -14,6 +14,34 @@
 - [x] fix the `new Date()` problem with the setUpdate method, in `use-exercise-data.ts`.
 - [x] fix option for when user clicks on 60 days option, it should bring 60days data.
 - [x] add 2 option in `/analytics` page, card/table with card add view more and with table add pagination since raw data can be too big.
+- [ ] why is `/about` page rendering multiple times? in terminal, it is showing the same page multiple times, hmr.
+- [ ] add streak data to zustand to be able to fetch in profile page, along side other handy data.
+
+```bash
+○ Compiling / ...
+ ✓ Compiled in 559ms
+ ✓ Compiled / in 718ms
+ GET / 200 in 1368ms
+ GET /about 200 in 1414ms
+ GET / 200 in 430ms
+ GET /about 200 in 444ms
+ GET / 200 in 326ms
+ GET /about 200 in 385ms
+ GET / 200 in 338ms
+ GET /about 200 in 386ms
+ GET / 200 in 360ms
+ GET /about 200 in 359ms
+ GET / 200 in 338ms
+ GET /about 200 in 341ms
+ GET / 200 in 333ms
+ GET /about 200 in 363ms
+ GET / 200 in 289ms
+ GET /about 200 in 381ms
+ GET /favicon.ico?favicon.da171a61.ico 200 in 351ms
+ GET /favicon.ico 200 in 401ms
+ GET /favicon.ico?favicon.da171a61.ico 200 in 233ms
+ GET /favicon.ico 200 in 240ms
+```
 
 <!-- TODOs Backend  -->
 
@@ -29,6 +57,7 @@
 - [x] in analyzeLogService, we are subtracting from current date if user stops for a long time then the last x days we will fetch wouldn't be in that range it should be from the last recorded date till the x days.
 - [ ] store user gender in the database.
 - [x] there is some bug in the streak calculation, when new user logs for first time longest stays on 0 will check later on.
+- [ ] we can compress the size of the load send to redis by compressing/decompressing it via zlib: `superjson+gzip`
 
 <!-- TODOs Database  -->
 

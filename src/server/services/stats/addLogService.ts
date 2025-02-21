@@ -58,7 +58,7 @@ async function addLog(logs: LogBody, userId: string, timeZone?: string | null) {
         tx.dailyLog.createManyAndReturn({
           data: logs.entries.map((entry) => ({
             userId,
-            date: adjustDate,
+            // date: adjustDate,
             workout: entry.workout,
             reps: entry.reps,
             weight: entry.weight! * 100,
@@ -73,7 +73,7 @@ async function addLog(logs: LogBody, userId: string, timeZone?: string | null) {
           data: {
             current_streak: newCurrentStreak,
             longest_streak: newLongestStreak,
-            last_log_date: adjustDate,
+            last_log_date: new Date(),
           },
         }),
       ]);

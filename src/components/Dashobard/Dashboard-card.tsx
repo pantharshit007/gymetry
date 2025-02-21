@@ -7,6 +7,7 @@ interface DashboardCardProps {
   icon: LucideIcon;
   content: string;
   description: string;
+  className?: string;
 }
 
 function DashboardCard({
@@ -14,9 +15,10 @@ function DashboardCard({
   icon: Icon,
   content,
   description,
+  className,
 }: DashboardCardProps) {
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         <Icon className="h-4 w-4 text-muted-foreground text-orange-500" />
