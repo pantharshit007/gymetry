@@ -19,6 +19,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "db:docker": "bash ./start-database.sh",
+    "dev:docker": "prisma migrate deploy && pnpm dev",
     "clean": "rm -rf node_modules",
     "superclean": "npm cache clean --force && rm -rf node_modules package-lock.json",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
