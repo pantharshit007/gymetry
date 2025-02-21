@@ -49,7 +49,7 @@
 - [x] optimize the `addLog` service for streak calculation.
 - [x] [!important] add redis for caching, to add last log date and check streak based on last log date.
 - [x] update the cache when user add new log in the service, currently it will be staled till the next 7 days.
-- [ ] add docker compose file.
+- [x] add docker compose file.
 - [x] add rate limiting
 - [ ] add rate limiting for /auth point: Google OAuth.
 - [x] add analytics with posthog.

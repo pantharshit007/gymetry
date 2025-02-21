@@ -36,6 +36,17 @@ git clone https://github.com/pantharhsit007/gymetry.git
 cd gymetry
 ```
 
+> [!IMPORTANT]
+> Make sure to set up the `.env` file before running the docker-compose.
+
+### Docker (Recommended)
+
+```bash
+docker-compose up --watch
+```
+
+_or_
+
 ### Install Dependencies
 
 ```bash
@@ -50,14 +61,14 @@ pnpm dev
 
 ## Environment Variables
 
-Create a `.env` file in the root directory and add the following:
+Create a `.env` file in the root directory from `.env.example` and add the following:
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3000
 AUTH_SECRET=""
 AUTH_GOOGLE_ID=""
 AUTH_GOOGLE_SECRET=""
-DATABASE_URL="postgresql://postgres:mysecretpassword@localhost:5432/gymetry"
+DATABASE_URL="postgresql://postgres:mysecretpassword@localhost:5432/gymetry-db"
 REDIS_URL="redis://localhost:6379"
 UPSTASH_REDIS_REST_URL=""
 UPSTASH_REDIS_REST_TOKEN=""
@@ -74,17 +85,13 @@ Gymetry uses PostgreSQL as its database and Redis for caching. You have a couple
 
 ### Option 1: Using Docker (Recommended)
 
-If you have Docker installed, you can spin up both PostgreSQL and Redis with one command:
+#### Start PostgreSQL
 
 ```bash
 pnpm db:docker
 ```
 
-_(This command should be set up in your package.json scripts to run a Docker Compose file that starts both services.)_
-
-Alternatively, if you prefer to run the services manually, use the commands below:
-
-#### Start PostgreSQL
+_or_
 
 ```bash
 docker run --name gymetry-db \
@@ -102,6 +109,13 @@ docker run --name gymetry-redis \
   -p 6379:6379 \
   -d redis
 ```
+
+### Option 2: Using Providers
+
+#### Grab the Database and Redis URLs from your provider
+
+- _PostgreSQL_: Neon, Avian or Vercel
+- _Redis_: Redis Labs, Redis Enterprise, Upstash, etc.
 
 Ensure that your `.env` file’s `DATABASE_URL` and `REDIS_URL` match the settings above.
 
