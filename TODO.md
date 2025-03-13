@@ -58,6 +58,7 @@
 - [ ] store user gender in the database.
 - [x] there is some bug in the streak calculation, when new user logs for first time longest stays on 0 will check later on.
 - [ ] we can compress the size of the load send to redis by compressing/decompressing it via zlib: `superjson+gzip`
+- [ ] I think i created a bug i am calculating last streak data ex: 7 days from the last log date instead it should be from today till 7 days in past in the services `subDays(new Date(), 7)` 
 
 <!-- TODOs Database  -->
 
