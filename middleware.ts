@@ -9,7 +9,9 @@ const envOrigins =
 
 const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
 
-console.log("[Middleware] Allowed CORS Origins:", allowedOrigins); // For debugging
+if (env.NODE_ENV === "development") {
+  console.log("[Middleware] Allowed CORS Origins:", allowedOrigins); // For debugging
+}
 
 /**
  * Helper function to add CORS headers to a response
