@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { CalendarIcon, Plus, Save, Trash2 } from "lucide-react";
+import { CalendarIcon, Loader, Plus, Save, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { Variation } from "@prisma/client";
 
@@ -209,17 +209,16 @@ export default function StatsPage() {
                       value={entry.steps ?? ""}
                       required
                       min={1}
-                      onChange={(e) =>
-                        updateEntry(
-                          index,
-                          "steps",
-                          Number.parseInt(e.target.value) || 0,
-                        )
-                      }
+                      onChange={(e) => {
+                        const steps = Number.parseInt(e.target.value) || 0;
+                        updateEntry(index, "steps", steps);
+                        // converting steps to meters (1 step = 0.762 meters)
+                        // updateEntry(index, "distance", steps * 0.762);
+                      }}
                     />
                     <Input
                       type="number"
-                      placeholder="Distance (meters)"
+                      placeholder={`Distance (meters): ${(entry.steps || 0) * 0.762}`}
                       value={entry.distance ?? ""}
                       required
                       min={1}
@@ -295,8 +294,15 @@ export default function StatsPage() {
                 type="submit"
                 disabled={entries.length === 0 || isPending}
               >
-                <Save className="mr-2 h-4 w-4" />
-                Save Entries
+                {isPending ? (
+                  <>
+                    <Loader className="animate-spin" /> Saving..
+                  </>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" /> Save Entries
+                  </>
+                )}
               </Button>
             </div>
           </form>
