@@ -5,6 +5,9 @@
 - [ ] new add entry should move focus to the card in stats page.
 - [ ] why is `/about` page rendering multiple times? in terminal, it is showing the same page multiple times, hmr.
 - [ ] add streak data to zustand to be able to fetch in profile page, along side other handy data.
+- [ ] add streak logo, fix the streak thingy to make it 0 after break.
+- [ ] option for admins to delete the user.
+- [ ] update the demo card boxes with either true data or just remove them.
 - [ ] in the stats page, the distance is not being calculated correctly, when the user enters steps, it should be converted to meters.
 
 ```bash
