@@ -17,7 +17,10 @@ export class RedisCache<T> implements CacheMethod<T> {
     return this.instance;
   }
 
-  private generateKey(type: string, args: string[]): string {
+  private generateKey(type: string, args?: string[]): string {
+    if (!args || args.length === 0) {
+      return type;
+    }
     return `${type}:${args.join(":")}`;
   }
 

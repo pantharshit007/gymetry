@@ -19,6 +19,7 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
     CACHE_TTL: z.string().optional().default("86400"),
     CORS_ALLOWED_ORIGINS: z.string().optional().default("http://localhost:3000"),
+    REDIS_JOB_API_KEY: z.string().optional().default("<REDIS_JOB_API_KEY>"),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -53,6 +54,7 @@ export const env = createEnv({
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
     CORS_ALLOWED_ORIGINS: process.env.CORS_ALLOWED_ORIGINS,
+    REDIS_JOB_API_KEY: process.env.REDIS_JOB_API_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
