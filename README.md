@@ -6,20 +6,7 @@
   <img src="./public/img/preview.png" alt="Gymetry Logo" />
 </p>
 
-<p align="center">
-  <a href="https://gymetry.vercel.app">
-    <img src="https://img.shields.io/badge/website-blue?style=for-the-badge&logo=vercel&logoColor=white" alt="Website">
-  </a>
-  <a href="https://github.com/pantharhsit007/gymetry/issues">
-    <img src="https://img.shields.io/github/issues/pantharhsit007/gymetry?style=for-the-badge" alt="Issues">
-  </a>
-  <a href="https://github.com/pantharhsit007/gymetry/stargazers">
-    <img src="https://img.shields.io/github/stars/pantharhsit007/gymetry?style=for-the-badge" alt="Stars">
-  </a>
-  <a href="https://github.com/pantharhsit007/gymetry/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/pantharhsit007/gymetry?style=for-the-badge" alt="License">
-  </a>
-</p>
+![Cron job status](https://api.cron-job.org/jobs/5850783/9670a7f4a7a2e939/status-3.svg)
 
 [![Landing page](./public/img/banner.png)](https://www.tella.tv/video/randoms-video-1vbv)
 
